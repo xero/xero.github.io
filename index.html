@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>xero.github.io</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="xero on github">
+		<meta name="author" content="xero harrison">
+		<link href="ui/css/bootstrap.css" rel="stylesheet">
+		<link href="ui/css/bootstrap-responsive.css" rel="stylesheet">
+		<link href="ui/css/gh.css" rel="stylesheet">
+		<link href="ui/css/octicons.css" rel="stylesheet">
+		<script type="text/javascript" src="ui/js/head.js"></script>
+		<!--[if lt IE 9]>
+			<script src="ui/js/html5shiv.js"></script>
+		<![endif]-->
+		<link rel="shortcut icon" href="favicon.ico">
+	</head>
+	<body>
+		<div id="wrap">
+			<nav class="navbar navbar-fixed-top navbar-inverse">
+				<div class="navbar-inner">
+					<div class="container">
+						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+							<i class="icon-bar"></i>
+							<i class="icon-bar"></i>
+							<i class="icon-bar"></i>
+						</a>
+						<a class="brand" href="http://github.com/xero"><span class="mini-icon mini-icon-octocat"></span>&nbsp;xero</a>
+						<div class="nav-collapse collapse">
+							<ul class="nav">
+								<li><a id="navActivity" href="#"><span class="mini-icon mini-icon-notifications"></span>&nbsp;activity</a></li>
+								<li><a id="navRepos" href="#"><span class="mini-icon mini-icon-public-repo"></span><span id="repoCount"></span>&nbsp;repos</a></li>
+								<li><a id="navGists" href="#"><span class="mini-icon mini-icon-gist"></span><span id="gistCount"></span>&nbsp;gists</a></li>
+								<li><a id="navOrgs" href="#"><span class="mini-icon mini-icon-team"></span><span id="orgCount"></span>&nbsp;organizations</a></li>
+								<li><a id="navWatch" href="#"><span class="mini-icon mini-icon-watchers"></span><span id="watchCount"></span>&nbsp;following</a></li>
+								<li><a id="navFollow" href="#"><span class="mini-icon mini-icon-follow"></span><span id="followCount"></span>&nbsp;followers</a></li>
+								<li><a id="navTip" href="https://www.gittip.com/xero/" target="_new"><span class="mini-icon mini-icon-beer"></span>&nbsp;gittip</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</nav>			
+			<div class="container">
+				<header class="hero-unit">
+					<img src="ui/img/xero-pixel-graff.png" class="pull-right">
+					<span id="title"></span>
+				</header>
+				<span id="body"></span>
+			</div>
+			<div id="push"></div>
+		</div>
+		<footer id="footer">
+			<div class="container">
+				<p class="credit"><a href="http://creativecommons.org/licenses/by-sa/3.0/" target="_new"><img src="ui/img/cc.png" alt="creative commons - attribution-shareAlike 3.0 unported" title="creative commons - attribution-shareAlike 3.0 unported"></a>&nbsp;&nbsp;&nbsp;xero harrison&nbsp;&nbsp;&nbsp;<a href="http://xero.nu">http://xero.nu</a></p>
+			</div>
+		</footer>
+		<script type="text/javascript">
+			head.js(
+				"ui/js/jq.js",
+				"ui/js/bootstrap.js",
+				"ui/js/gh.js",
+				function(){
+					init();
+					activity();
+				}
+			);
+		</script>
+	</body>
+</html>
