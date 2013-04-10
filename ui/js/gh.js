@@ -119,7 +119,7 @@ function activity() {
 						icon = 'mega-icon-text-file';
 					break;
 					case 'IssueCommentEvent':
-						var body = result[i].payload.issue.body.length > 250 ? result[i].payload.issue.body.substring(0, 249)+'...' : result[i].payload.issue.body;
+						var body = result[i].payload.issue.body.length > 250 ? result[i].payload.comment.body.substring(0, 249)+'...' : result[i].payload.comment.body;
 						msg = '&nbsp;commented on issue: '+repo+' / <a href="'+result[i].payload.issue.html_url+'">'+result[i].payload.issue.title+'</a><br/><blockquote>'+body+'</blockquote>';
 						icon = 'mega-icon-issue-comment';
 					break;
