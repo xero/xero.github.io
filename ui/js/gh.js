@@ -96,7 +96,23 @@ function activity() {
 						}
 					break;
 					case 'DeleteEvent':
-						icon = 'mega-icon-delete';
+						var ref = result[i].payload.ref;
+						var type = result[i].payload.ref_type;
+						switch(type) {
+							case 'branch':
+								icon = 'mega-icon-branch-delete';
+								var mini = 'mini-icon-branch-delete';
+							break;
+							case 'repo':
+								icon = 'mega-icon-delete';
+								var mini = 'mini-icon-delete';
+							break;
+							case 'tag':
+								icon = 'mega-icon-tag-delete';
+								var mini = 'mini-icon-tag-delete';
+							break;
+						}
+						msg = '&nbsp;deleted&nbsp;'+type+'&nbsp;<span class="well"><span class="mini-icon '+mini+'"></span>&nbsp;'+ref+'&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/>';
 					break;
 					case 'DownloadEvent':
 						icon = 'mega-icon-download';
