@@ -133,6 +133,7 @@ function activity() {
 					break;
 					case 'GollumEvent':
 						icon = 'mega-icon-text-file';
+						msg = '&nbsp;created the <a href="'+result[i].payload.pages.html_url+'">'+result[i].payload.pages[0].title+'</a> page in the '+repo+' wiki.<br/>';
 					break;
 					case 'IssueCommentEvent':
 						var body = result[i].payload.issue.body.length > 250 ? result[i].payload.comment.body.substring(0, 249)+'...' : result[i].payload.comment.body;
