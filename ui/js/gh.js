@@ -68,7 +68,7 @@ function activity() {
 			$.each(result, function(i){
 				var user = '<a href="http://github.com/'+result[i].actor.login+'">'+result[i].actor.login+'</a>';
 				var repo = '<a href="http://github.com/'+result[i].repo.name+'">'+result[i].repo.name+'</a>';
-				var date = result[i].created_at;
+				var date = timeAgo(new Date(result[i].created_at).getTime() / 1000);
 				var icon = 'mega-icon-help';
 				var msg = '<br/>';
 				switch(result[i].type) {
@@ -359,3 +359,24 @@ function abortAjax() {
 		jqXHR.abort();
 	});				
 };
+function timeAgo(time){
+	var units = [
+		{ name: "second", limit: 60, in_seconds: 1 },
+		{ name: "minute", limit: 3600, in_seconds: 60 },
+		{ name: "hour", limit: 86400, in_seconds: 3600  },
+		{ name: "day", limit: 604800, in_seconds: 86400 },
+		{ name: "week", limit: 2629743, in_seconds: 604800  },
+		{ name: "month", limit: 31556926, in_seconds: 2629743 },
+		{ name: "year", limit: null, in_seconds: 31556926 }
+	];
+	var diff = (new Date() - new Date(time*1000)) / 1000;
+	if (diff < 5) return "now";
+
+	var i = 0;
+	while (unit = units[i++]) {
+		if (diff < unit.limit || !unit.limit){
+			var diff =  Math.floor(diff / unit.in_seconds);
+			return (diff + " " + unit.name + (diff>1 ? "s" : ""))+' ago';
+		}
+	};
+}
