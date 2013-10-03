@@ -31,26 +31,26 @@ function init() {
 }
 function overview() {
 	api(
-		'GET', 
-		'https://api.github.com/users/xero', 
-		'', 
+		'GET',
+		'https://api.github.com/users/xero',
+		'',
 		function(result){
 			$('#repoCount').html('&nbsp;'+ result.public_repos);
 			$('#gistCount').html('&nbsp;'+result.public_gists);
 			$('#watchCount').html('&nbsp;'+result.following);
 			$('#followCount').html('&nbsp;'+result.followers);
-		}, 
+		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
 		}
 	);
 	api(
-		'GET', 
-		'https://api.github.com/users/xero/orgs', 
-		'', 
+		'GET',
+		'https://api.github.com/users/xero/orgs',
+		'',
 		function(result){
 			$('#orgCount').html('&nbsp;'+result.length);
-		}, 
+		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
 		}
@@ -60,9 +60,9 @@ function activity() {
 	$('#title').html('<h1>activity</h1>');
 	$('#body').html(msgLoading);
 	api(
-		'GET', 
-		'https://api.github.com/users/xero/events', 
-		'', 
+		'GET',
+		'https://api.github.com/users/xero/events',
+		'',
 		function(result){
 			var x = '<div class="container-fluid">';
 			$.each(result, function(i){
@@ -154,7 +154,7 @@ function activity() {
 							case 'opened':
 							default:
 								icon = 'mega-icon-issue-opened';
-							break;							
+							break;
 						}
 					break;
 					case 'MemberEvent':
@@ -166,6 +166,7 @@ function activity() {
 					break;
 					case 'PullRequestEvent':
 						icon = 'mega-icon-pull-request';
+						msg = '&nbsp;'+result[i].payload.action+'&nbsp; a pull request:&nbsp;<a href="'+result[i].payload.pull_request.html_url+'">'+result[i].repo.name+'/#'+result[i].payload.number+'</a><br/><blockquote><a href="'+result[i].payload.pull_request.head.repo.html_url+'/commit/'+result[i].payload.pull_request.head.sha+'">'+result[i].payload.pull_request.head.sha.substring(0, 7)+'</a>&nbsp;'+result[i].payload.pull_request.title+'</blockquote>';
 					break;
 					case 'PullRequestReviewCommentEvent':
 						icon = 'mega-icon-commit-comment';
@@ -174,7 +175,7 @@ function activity() {
 						icon = 'mega-icon-push';
 						var ref = result[i].payload.ref.replace(/^.*\/(.*)$/, "$1");
 						var body = result[i].payload.commits[0].message.length > 250 ? result[i].payload.commits[0].message.substring(0, 249)+'...' : result[i].payload.commits[0].message;
-						msg = '&nbsp;pushed to&nbsp;<span class="well"><span class="mini-icon mini-icon-fork"></span>&nbsp;<a href="http://github.com/'+result[i].repo.name+'/tree/'+ref+'">'+ref+'</a>&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/><blockquote><a href="http://github.com/'+result[i].repo.name+'/commit/'+result[i].payload.commits[0].sha+'">'+result[i].payload.commits[0].sha.substring(0, 7)+'</a>&nbsp;'+body+'</blockquote>';
+						msg = '&nbsp;pushed to&nbsp;<span class="well"><span class="mini-icon mini-icon-fork"></span>&nbsp;<a href="http://github.com/'+result[i].repo.name+'/tree/'+ref+'">'+ref+'</a>&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/><blockquote><a href="http://github.com/'+result[i].repo.html_url+'/commit/'+result[i].payload.commits[0].sha+'">'+result[i].payload.commits[0].sha.substring(0, 7)+'</a>&nbsp;'+body+'</blockquote>';
 					break;
 					case 'TeamAddEvent':
 						icon = 'mega-icon-member-added';
@@ -184,10 +185,10 @@ function activity() {
 						msg = '&nbsp;started watching&nbsp;'+repo+'<br/>';
 					break;
 				}
-				x += '<div class="row-fluid"><div class="span1"><span class="mega-icon '+icon+'"></span></div><div class="span11">'+user+msg+'<small>'+date+'</small><br/><br/></div></div>'
+				x += '<div class="row-fluid"><div class="span1"><span class="mega-icon '+icon+'"></span></div><div class="span11">'+user+msg+'<small>'+date+'</small><br/><br/></div></div>';
 			});
 			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
-		}, 
+		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
 		}
@@ -197,9 +198,9 @@ function repos() {
 	$('#title').html('<h1>repositories</h1>');
 	$('#body').html(msgLoading);
 	api(
-		'GET', 
-		'https://api.github.com/users/xero/repos', 
-		'', 
+		'GET',
+		'https://api.github.com/users/xero/repos',
+		'',
 		function(result){
 			var x = '<div class="container-fluid">';
 			$.each(result, function(i){
@@ -208,13 +209,13 @@ function repos() {
 				var descript = result[i].description;
 				var watchers = result[i].watchers_count;
 				var forks = result[i].forks_count;
-				var isfork = result[i].fork==true?'repo-forked':'public-repo';
+				var isfork = result[i].fork===true?'repo-forked':'public-repo';
 				var date = result[i].created_at;
 				var update = result[i].updated_at;
-				x += '<div class="row-fluid"><div class="span1"><span class="repo-icon mega-icon mega-icon-'+isfork+'"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="mini-icon mini-icon-star"></span>&nbsp;'+watchers+'<br/><span class="mini-icon mini-icon-fork"></span>&nbsp;'+forks+'</div></div>'
+				x += '<div class="row-fluid"><div class="span1"><span class="repo-icon mega-icon mega-icon-'+isfork+'"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="mini-icon mini-icon-star"></span>&nbsp;'+watchers+'<br/><span class="mini-icon mini-icon-fork"></span>&nbsp;'+forks+'</div></div>';
 			});
 			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
-		}, 
+		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
 		}
@@ -224,18 +225,18 @@ function orgs() {
 	$('#title').html('<h1>organizations</h1>');
 	$('#body').html(msgLoading);
 	api(
-		'GET', 
-		'https://api.github.com/users/xero/orgs', 
-		'', 
+		'GET',
+		'https://api.github.com/users/xero/orgs',
+		'',
 		function(result){
 			var x = '<div class="container-fluid">';
 			var j = 1;
 			$.each(result, function(i){
 				var name = result[i].login;
 				var img = '<a href="http://github.com/'+result[i].login+'"><img src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
-				if((j-1)%4 == 0){
+				if((j-1)%4 === 0){
 					x +='<div clas="row-fluid"><div class="span3"><h6>'+name+'</h6>'+img+'</div>';
-				} else if(j%4 == 0) {
+				} else if(j%4 === 0) {
 					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div></div>';
 				} else {
 					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div>';
@@ -243,7 +244,7 @@ function orgs() {
 				++j;
 			});
 			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
-		}, 		
+		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
 		}
@@ -253,9 +254,9 @@ function gists() {
 	$('#title').html('<h1>gists</h1>');
 	$('#body').html(msgLoading);
 	api(
-		'GET', 
-		'https://api.github.com/users/xero/gists', 
-		'', 
+		'GET',
+		'https://api.github.com/users/xero/gists',
+		'',
 		function(result){
 			var x = '<div class="container-fluid">';
 			$.each(result, function(i){
@@ -273,7 +274,7 @@ function gists() {
 				x += '<div class="row-fluid"><div class="span1"><span class="gist-icon mega-icon mega-icon-gist"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="mini-icon mini-icon-commit-comment"></span>&nbsp;'+comments+'<br/><span class="mini-icon mini-icon-gist"></span>&nbsp;'+files+'<br/></div></div>';
 			});
 			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
-		}, 
+		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
 		}
@@ -283,18 +284,18 @@ function following() {
 	$('#title').html('<h1>following</h1>');
 	$('#body').html(msgLoading);
 	api(
-		'GET', 
-		'https://api.github.com/users/xero/following', 
-		'', 
+		'GET',
+		'https://api.github.com/users/xero/following',
+		'',
 		function(result){
 			var x = '<div class="container-fluid">';
 			var j = 1;
 			$.each(result, function(i){
 				var name = result[i].login;
 				var img = '<a href="http://github.com/'+result[i].login+'"><img width="80" height="80" src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
-				if((j-1)%4 == 0){
+				if((j-1)%4 === 0){
 					x +='<div clas="row-fluid"><div class="span3"><h6>'+name+'</h6>'+img+'</div>';
-				} else if(j%4 == 0) {
+				} else if(j%4 === 0) {
 					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div></div>';
 				} else {
 					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div>';
@@ -302,7 +303,7 @@ function following() {
 				++j;
 			});
 			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
-		}, 
+		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
 		}
@@ -312,18 +313,18 @@ function followers() {
 	$('#title').html('<h1>followers</h1>');
 	$('#body').html(msgLoading);
 	api(
-		'GET', 
-		'https://api.github.com/users/xero/followers', 
-		'', 
+		'GET',
+		'https://api.github.com/users/xero/followers',
+		'',
 		function(result){
 			var x = '<div class="container-fluid">';
 			var j = 1;
 			$.each(result, function(i){
 				var name = result[i].login;
 				var img = '<a href="http://github.com/'+result[i].login+'"><img width="80" height="80" src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
-				if((j-1)%4 == 0){
+				if((j-1)%4 === 0){
 					x +='<div clas="row-fluid"><div class="span3"><h6>'+name+'</h6>'+img+'</div>';
-				} else if(j%4 == 0) {
+				} else if(j%4 === 0) {
 					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div></div>';
 				} else {
 					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div>';
@@ -331,7 +332,7 @@ function followers() {
 				++j;
 			});
 			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
-		}, 
+		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
 		}
@@ -350,14 +351,16 @@ function api(verb, url, data, success, error) {
 			xhrPool.push(jqXHR);
 		},
 		complete: function(jqXHR, textStatus) {
-			xhrPool = $.grep(xhrPool, function(x){return x!=jqXHR});
+			xhrPool = $.grep(xhrPool, function(x){
+				return x!=jqXHR;
+			});
 		}
 	});
 };
 function abortAjax() {
 	$.each(xhrPool, function(idx, jqXHR) {
 		jqXHR.abort();
-	});				
+	});
 };
 function timeAgo(time){
 	var units = [
@@ -378,5 +381,5 @@ function timeAgo(time){
 			var diff =  Math.floor(diff / unit.in_seconds);
 			return (diff + " " + unit.name + (diff>1 ? "s" : ""))+' ago';
 		}
-	};
+	}
 }
