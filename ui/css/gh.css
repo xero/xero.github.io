@@ -115,6 +115,10 @@ nav a .mini-icon {
 .octicon {
     color: #dbc06f;
 }
+.octicon.fixed-width {
+    display: inline-block;
+    width: 15px;
+}
 @media (max-width: 979px) {
     #wrap > .container {
         padding-top: 0px;

@@ -69,11 +69,11 @@ function activity() {
 				var user = '<a href="http://github.com/'+result[i].actor.login+'">'+result[i].actor.login+'</a>';
 				var repo = '<a href="http://github.com/'+result[i].repo.name+'">'+result[i].repo.name+'</a>';
 				var date = timeAgo(new Date(result[i].created_at).getTime() / 1000);
-				var icon = 'mega-icon-help';
+				var icon = 'octicon-mark-github';
 				var msg = '<br/>';
 				switch(result[i].type) {
 					case 'CommitCommentEvent':
-						icon = 'mega-icon-discussion';
+						icon = 'octicon-comment-discussion';
 						var body = result[i].payload.issue.body.length > 50 ? result[i].payload.issue.body.substring(0, 49)+'...' : result[i].payload.issue.body;
 						msg = '&nbsp;commented on commit: '+repo+' / <a href="'+result[i].payload.issue.html_url+'">'+result[i].payload.issue.title+'</a><br/><blockquote>'+body+'</blockquote>';
 					break;
@@ -81,17 +81,17 @@ function activity() {
 						var type = result[i].payload.ref_type;
 						switch(type) {
 							case 'branch':
-								icon = 'mini-icon-branch';
-								msg = '&nbsp;created&nbsp;'+type+'&nbsp;<span class="well"><span class="mini-icon mini-icon-branch"></span>&nbsp;'+result[i].payload.ref+'&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/>';
+								icon = 'octicon-git-branch-create';
+								msg = '&nbsp;created&nbsp;'+type+'&nbsp;<span class="well"><span class="octicon octicon-git-branch-create"></span>&nbsp;'+result[i].payload.ref+'&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/>';
 							break;
 							case 'tag':
-								icon = 'mini-icon-tag-create';
-								msg = '&nbsp;created&nbsp;'+type+'&nbsp;<span class="well"><span class="mini-icon mini-icon-tag-create"></span>&nbsp;'+result[i].payload.ref+'&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/>';
+								icon = 'octicon-tag-add';
+								msg = '&nbsp;created&nbsp;'+type+'&nbsp;<span class="well"><span class="octicon octicon-tag-add"></span>&nbsp;'+result[i].payload.ref+'&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/>';
 							break;
 							case 'repository':
 							default:
-								icon = 'mini-icon-create';
-								msg = '&nbsp;created&nbsp;'+type+'&nbsp;<span class="well"><span class="mini-icon mini-icon-create"></span>&nbsp;'+repo+'&nbsp;</span><br/>';
+								icon = 'octicon-repo-create';
+								msg = '&nbsp;created&nbsp;'+type+'&nbsp;<span class="well"><span class="octicon octicon-repo-create"></span>&nbsp;'+repo+'&nbsp;</span><br/>';
 							break;
 						}
 					break;
@@ -100,45 +100,45 @@ function activity() {
 						var type = result[i].payload.ref_type;
 						switch(type) {
 							case 'branch':
-								icon = 'mega-icon-branch-delete';
-								var mini = 'mini-icon-branch-delete';
+								icon = 'octicon-git-branch-delete';
+								var mini = 'octicon-git-branch-delete';
 							break;
 							case 'repo':
-								icon = 'mega-icon-delete';
-								var mini = 'mini-icon-delete';
+								icon = 'octicon-repo-delete';
+								var mini = 'octicon-repo-delete';
 							break;
 							case 'tag':
-								icon = 'mega-icon-tag-delete';
-								var mini = 'mini-icon-tag-delete';
+								icon = 'octicon-tag-remove';
+								var mini = 'octicon-tag-remove';
 							break;
 						}
-						msg = '&nbsp;deleted&nbsp;'+type+'&nbsp;<span class="well"><span class="mini-icon '+mini+'"></span>&nbsp;'+ref+'&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/>';
+						msg = '&nbsp;deleted&nbsp;'+type+'&nbsp;<span class="well"><span class="octicon '+mini+'"></span>&nbsp;'+ref+'&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/>';
 					break;
 					case 'DownloadEvent':
-						icon = 'mega-icon-download';
+						icon = 'octicon-cloud-download';
 					break;
 					case 'FollowEvent':
-						icon = 'mega-icon-follow';
+						icon = 'octicon-person-follow';
 						msg = '&nbsp;started following&nbsp;<a href="'+result[i].payload.target.html_url+'">'+result[i].payload.target.login+'</a><br/>';
 					break;
 					case 'ForkEvent':
-						icon = 'mini-icon-repo-forked';
-						msg = '&nbsp;forked&nbsp;'+repo+'&nbsp;into&nbsp;<span class="well"><span class="mini-icon mini-icon-fork"></span>&nbsp;<a href="http://github.com/'+result[i].payload.forkee.full_name+'">'+result[i].payload.forkee.full_name+'</a>&nbsp;</span><br/>';
+						icon = 'octicon-repo-forked';
+						msg = '&nbsp;forked&nbsp;'+repo+'&nbsp;into&nbsp;<span class="well"><span class="octicon octicon-repo-forked"></span>&nbsp;<a href="http://github.com/'+result[i].payload.forkee.full_name+'">'+result[i].payload.forkee.full_name+'</a>&nbsp;</span><br/>';
 					break;
 					case 'ForkApplyEvent':
-						icon = 'mega-icon-fork';
+						icon = 'octicon-git-branch';
 					break;
 					case 'GistEvent':
-						icon = 'mega-icon-gist';
+						icon = '.octicon-git-gist';
 					break;
 					case 'GollumEvent':
-						icon = 'mega-icon-text-file';
+						icon = 'octicon-file-text';
 						msg = '&nbsp;created the <a href="'+result[i].payload.pages.html_url+'">'+result[i].payload.pages[0].title+'</a> page in the '+repo+' wiki.<br/>';
 					break;
 					case 'IssueCommentEvent':
 						var body = result[i].payload.issue.body.length > 250 ? result[i].payload.comment.body.substring(0, 249)+'...' : result[i].payload.comment.body;
 						msg = '&nbsp;commented on issue: '+repo+' / <a href="'+result[i].payload.issue.html_url+'">'+result[i].payload.issue.title+'</a><br/><blockquote>'+body+'</blockquote>';
-						icon = 'mega-icon-issue-comment';
+						icon = 'octicon-comment-add';
 					break;
 					case 'IssuesEvent':
 						var action = result[i].payload.action;
@@ -146,46 +146,46 @@ function activity() {
 						msg = '&nbsp;'+action+'&nbsp;issue&nbsp;'+repo+'&nbsp;/&nbsp;<a href="'+result[i].payload.issue.html_url+'">'+result[i].payload.issue.title+'</a><blockquote>'+body+'</blockquote>';
 						switch(action) {
 							case 'reopened':
-								icon = 'mega-icon-issue-reopened';
+								icon = 'octicon-issue-reopened';
 							break;
 							case 'closed':
-								icon = 'mega-icon-issue-closed';
+								icon = 'octicon-issue-closed';
 							break;
 							case 'opened':
 							default:
-								icon = 'mega-icon-issue-opened';
+								icon = 'octicon-issue-opened';
 							break;
 						}
 					break;
 					case 'MemberEvent':
-						icon = 'mega-icon-person';
+						icon = 'octicon-person';
 						msg = '&nbsp;'+result[i].payload.action+'&nbsp;member&nbsp;<a href="http://github.com/'+result[i].payload.member.login+'">'+result[i].payload.member.login+'</a>&nbsp;to&nbsp;'+repo+'<br/>';
 					break;
 					case 'PublicEvent':
-						icon = 'mega-icon-megaphone';
+						icon = 'octicon-megaphone';
 					break;
 					case 'PullRequestEvent':
-						icon = 'mega-icon-pull-request';
+						icon = 'octicon-git-pull-request';
 						msg = '&nbsp;'+result[i].payload.action+'&nbsp; a pull request:&nbsp;<a href="'+result[i].payload.pull_request.html_url+'">'+result[i].repo.name+'/#'+result[i].payload.number+'</a><br/><blockquote><a href="'+result[i].payload.pull_request.head.repo.html_url+'/commit/'+result[i].payload.pull_request.head.sha+'">'+result[i].payload.pull_request.head.sha.substring(0, 7)+'</a>&nbsp;'+result[i].payload.pull_request.title+'</blockquote>';
 					break;
 					case 'PullRequestReviewCommentEvent':
-						icon = 'mega-icon-commit-comment';
+						icon = 'octicon-comment';
 					break;
 					case 'PushEvent':
-						icon = 'mega-icon-push';
+						icon = 'octicon-repo-push';
 						var ref = result[i].payload.ref.replace(/^.*\/(.*)$/, "$1");
 						var body = result[i].payload.commits[0].message.length > 250 ? result[i].payload.commits[0].message.substring(0, 249)+'...' : result[i].payload.commits[0].message;
-						msg = '&nbsp;pushed to&nbsp;<span class="well"><span class="mini-icon mini-icon-fork"></span>&nbsp;<a href="http://github.com/'+result[i].repo.name+'/tree/'+ref+'">'+ref+'</a>&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/><blockquote><a href="http://github.com/'+result[i].repo.html_url+'/commit/'+result[i].payload.commits[0].sha+'">'+result[i].payload.commits[0].sha.substring(0, 7)+'</a>&nbsp;'+body+'</blockquote>';
+						msg = '&nbsp;pushed to&nbsp;<span class="well"><span class="octicon octicon-git-branch"></span>&nbsp;<a href="http://github.com/'+result[i].repo.name+'/tree/'+ref+'">'+ref+'</a>&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/><blockquote><a href="http://github.com/'+result[i].repo.html_url+'/commit/'+result[i].payload.commits[0].sha+'">'+result[i].payload.commits[0].sha.substring(0, 7)+'</a>&nbsp;'+body+'</blockquote>';
 					break;
 					case 'TeamAddEvent':
-						icon = 'mega-icon-member-added';
+						icon = 'octicon-person-add';
 					break;
 					case 'WatchEvent':
-						icon = 'mega-icon-watching';
+						icon = 'octicon-eye-watch';
 						msg = '&nbsp;started watching&nbsp;'+repo+'<br/>';
 					break;
 				}
-				x += '<div class="row-fluid"><div class="span1"><span class="mega-icon '+icon+'"></span></div><div class="span11">'+user+msg+'<small>'+date+'</small><br/><br/></div></div>';
+				x += '<div class="row-fluid"><div class="span1"><span class="mega-octicon '+icon+'"></span></div><div class="span11">'+user+msg+'<small>'+date+'</small><br/><br/></div></div>';
 			});
 			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
 		},
@@ -212,7 +212,7 @@ function repos() {
 				var isfork = result[i].fork===true?'repo-forked':'repo';
 				var date = result[i].created_at;
 				var update = result[i].updated_at;
-				x += '<div class="row-fluid"><div class="span1"><span class="octicon-repo mega-octicon octicon-'+isfork+'"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="octicon octicon-star"></span>&nbsp;'+watchers+'<br/><span class="octicon octicon-git-branch"></span>&nbsp;'+forks+'</div></div>';
+				x += '<div class="row-fluid"><div class="span1"><span class="octicon-repo mega-octicon octicon-'+isfork+'"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="octicon octicon-star fixed-width"></span>&nbsp;'+watchers+'<br/><span class="octicon octicon-git-branch fixed-width"></span>&nbsp;'+forks+'</div></div>';
 			});
 			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
 		},
@@ -271,7 +271,7 @@ function gists() {
 					name = e.filename;
 					return;
 				});
-				x += '<div class="row-fluid"><div class="span1"><span class="mega-octicon octicon-gist"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="octicon octicon-comment-discussion"></span>&nbsp;'+comments+'<br/><span class="octicon octicon-gist"></span>&nbsp;'+files+'<br/></div></div>';
+				x += '<div class="row-fluid"><div class="span1"><span class="mega-octicon octicon-gist"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="octicon octicon-comment-discussion fixed-width"></span>&nbsp;'+comments+'<br/><span class="octicon octicon-gist fixed-width"></span>&nbsp;'+files+'<br/></div></div>';
 			});
 			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
 		},
