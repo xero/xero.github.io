@@ -1,7 +1,7 @@
 var xhrPool = [];
-var msgLoading = '<div class="alert alert-info alert-block"><h1><span class="mega-icon mega-icon-hourglass"></span>&nbsp;loading</h1><p>accessing the github api...</p></div>';
-var msgSuccess = '<div class="alert alert-success alert-block"><h1><span class="mega-icon mega-icon-exclamation"></span>&nbsp;success!</h1><p>loaded data from the github api.</p></div>';
-var msgError = '<div class="alert alert-error alert-block"><h1><span class="mega-icon mega-icon-exclamation"></span>&nbsp;error!</h1><p>failed to load data from the github api.</p></div>';
+var msgLoading = '<div class="alert alert-info alert-block"><h1><span class="mega-octicon octicon-hourglass"></span>&nbsp;loading</h1><p>accessing the github api...</p></div>';
+var msgSuccess = '<div class="alert alert-success alert-block"><h1><span class="mega-octicon octicon-issue-opened"></span>&nbsp;success!</h1><p>loaded data from the github api.</p></div>';
+var msgError = '<div class="alert alert-error alert-block"><h1><span class="mega-octicon octicon-issue-opened"></span>&nbsp;error!</h1><p>failed to load data from the github api.</p></div>';
 function init() {
 	overview();
 	$('#navActivity').click(function(){
@@ -209,10 +209,10 @@ function repos() {
 				var descript = result[i].description;
 				var watchers = result[i].watchers_count;
 				var forks = result[i].forks_count;
-				var isfork = result[i].fork===true?'repo-forked':'public-repo';
+				var isfork = result[i].fork===true?'repo-forked':'repo';
 				var date = result[i].created_at;
 				var update = result[i].updated_at;
-				x += '<div class="row-fluid"><div class="span1"><span class="repo-icon mega-icon mega-icon-'+isfork+'"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="mini-icon mini-icon-star"></span>&nbsp;'+watchers+'<br/><span class="mini-icon mini-icon-fork"></span>&nbsp;'+forks+'</div></div>';
+				x += '<div class="row-fluid"><div class="span1"><span class="octicon-repo mega-octicon octicon-'+isfork+'"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="octicon octicon-star"></span>&nbsp;'+watchers+'<br/><span class="octicon octicon-git-branch"></span>&nbsp;'+forks+'</div></div>';
 			});
 			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
 		},
@@ -271,7 +271,7 @@ function gists() {
 					name = e.filename;
 					return;
 				});
-				x += '<div class="row-fluid"><div class="span1"><span class="gist-icon mega-icon mega-icon-gist"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="mini-icon mini-icon-commit-comment"></span>&nbsp;'+comments+'<br/><span class="mini-icon mini-icon-gist"></span>&nbsp;'+files+'<br/></div></div>';
+				x += '<div class="row-fluid"><div class="span1"><span class="mega-octicon octicon-gist"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="octicon octicon-comment-discussion"></span>&nbsp;'+comments+'<br/><span class="octicon octicon-gist"></span>&nbsp;'+files+'<br/></div></div>';
 			});
 			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
 		},

@@ -112,6 +112,9 @@ nav a .mini-icon {
 .move-down {
     margin-top: 60px;
 }
+.octicon {
+    color: #dbc06f;
+}
 @media (max-width: 979px) {
     #wrap > .container {
         padding-top: 0px;
