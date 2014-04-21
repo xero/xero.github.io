@@ -74,7 +74,6 @@ function activity() {
 				switch(result[i].type) {
 					case 'CommitCommentEvent':
 						icon = 'octicon-comment-discussion';
-						console.log(result[i].payload);
 						var body = result[i].payload.comment.body.length > 50 ? result[i].payload.comment.body.substring(0, 49)+'...' : result[i].comment.issue.body;
 						msg = '&nbsp;commented on commit: '+repo+' / <a href="'+result[i].payload.comment.html_url+'">'+result[i].payload.comment.title+'</a><br/><blockquote>'+body+'</blockquote>';
 					break;
