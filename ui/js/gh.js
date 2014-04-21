@@ -72,6 +72,10 @@ function activity() {
 				var icon = 'octicon-mark-github';
 				var msg = '<br/>';
 				switch(result[i].type) {
+					case 'ReleaseEvent':
+						icon = 'octicon-package';
+						msg = '&nbsp;released&nbsp;<span class="well"><a href="'+result[i].payload.release.zipball_url+'"><span class="octicon octicon-cloud-download"></span></a>&nbsp;<a href="'+result[i].payload.release.html_url+'">'+result[i].payload.release.name+'</a></span>&nbsp;at&nbsp;'+repo+'<br/>';
+					break;
 					case 'CommitCommentEvent':
 						icon = 'octicon-comment-discussion';
 						var body = result[i].payload.comment.body.length > 50 ? result[i].payload.comment.body.substring(0, 49)+'...' : result[i].comment.issue.body;
