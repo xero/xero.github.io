@@ -1,0 +1,135 @@
+html,
+body {
+	color: $fg;
+	height: 100%;
+	background: $bg;
+}
+a,
+a:visited {
+	color: $link;
+}
+.clear {
+	clear: both;
+}
+
+#wrap {
+	min-height: 100%;
+	height: auto;
+	margin: 0 auto -60px;
+	padding: 0 0 60px;
+}
+#push {
+	display: block;
+	background: $bg;
+	height: 30px;
+}
+#body {
+	.row.well {
+		margin-bottom: 10px;
+		height: auto;
+		min-height: $wellMinHeight;
+		display: block;
+		height: auto;
+
+		.icon {
+			height: $wellMinHeight;
+			text-align: center;
+
+			.mega-octicon {
+				@extend %vertical-align;
+				@extend %pixelated;
+			}
+		}
+		.msg {
+			.well {
+				padding: 6px;
+				color: $wellLink;
+				@extend %pixelated;
+
+				a,
+				a:visited {
+					color: $wellLink;
+				}
+			}
+			blockquote {
+				color: $quoteFg;
+				margin: 8px 0 4px 0;
+				padding: 15px;
+
+				a,
+				a:visited {
+					color: $quoteLink;
+				}
+			}
+		}
+		.date {
+			color: $dateFg;
+		}
+	}
+	.row.well.repo {
+		.icon {
+			height: 80px;
+		}
+		.meta {
+			height: 80px;
+
+			.line {
+				white-space: nowrap;
+				color: #fff;
+
+				.octicon {
+					color: $wellLink;
+					display: inline-block;
+					text-align: center;
+					width: 20px;
+				}
+			}
+
+			aside {
+				@extend %vertical-align;
+				@extend %pixelated;
+			}
+		}
+	}
+}
+
+#footer {
+	height: 60px;
+	background: #636363 url("../img/hash-dark.png");
+	.container {
+		padding-top: 10px;
+
+		span {
+			.octicon,
+			.octicon:hover {
+				display: inline-block;
+				font-size: 28px;
+				@include border-radius(50px);
+				padding: 2px 0 0 0;
+				background: #fff;
+				color: #000;
+			}
+			.octicon:hover {
+				background: #000;
+				color: #fff;
+			}
+		}
+		cite {
+			font-size: 12pt;
+			color: #000;
+			padding: 0 0 0 8px;
+
+			a,
+			a:visited {
+				font-weight: bold;
+				color: #ccc;
+				text-decoration: none;
+			}
+			a:hover,
+			a:focus {
+				color: #fff;
+				border-bottom: 1px solid #333;
+			}
+		}
+	}
+}

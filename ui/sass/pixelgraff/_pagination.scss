@@ -1,0 +1,46 @@
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  @include border-radius(0px);
+
+  > li {
+	> a,
+	> span {
+		color: #000;
+		background: url("../img/hash-light.png");
+	}
+	&:first-child {
+	  > a,
+	  > span {
+		margin-left: 0;
+		@include border-radius(0px);
+	  }
+	}
+	&:last-child {
+	  > a,
+	  > span {
+		@include border-radius(0px);
+	  }
+	}
+  }
+
+  > li > a,
+  > li > span {
+	&:hover,
+	&:focus {
+		color: #000;
+		background: #ccc url("../img/hash-light.png");
+	}
+  }
+
+  > .active > a,
+  > .active > span {
+	&,
+	&:hover,
+	&:focus {
+		border-color: #666;
+		color: #fff;
+		background: #636363 url("../img/hash-dark.png");
+	}
+  }
+}

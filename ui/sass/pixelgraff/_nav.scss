@@ -1,0 +1,161 @@
+.navbar,
+.navbar-default {
+	background: #222;
+	border-bottom: 4px solid #fff;
+	.navbar-brand {
+		@extend .pixelated;
+		position: absolute;
+		top: 5px;
+		left: auto;
+		padding: 0;
+		background: url("../img/xero-graff-alt.png") top center no-repeat;
+		width: 394px;
+		height: 172px;
+		z-index: 99999;
+	}
+	.nav,
+	.navbar-nav {
+		margin-left: 405px;
+		margin-top: 75px;
+		li > a {
+			color: $navDefault;
+			font-weight: bold;
+			text-align: center;
+			@extend %pixelated;
+		}
+		li > a:hover,
+		li > a:focus {
+			color: $navHover;
+		}
+		>.active>a,
+		>.active>a:focus, 
+		>.active>a:hover {
+			color: $navActive;
+			background: url("../img/arrow-light.png") bottom center no-repeat;
+		}
+		li > a span.octicon,
+		li > a:hover span.octicon,
+		li > a:focus span.octicon,
+		>.active>a span.octicon,
+		>.active>a:focus span.octicon, 
+		>.active>a:hover span.octicon {
+			display: block;
+			font-size: 20pt;
+		}
+	}
+	.container {
+		background-image: url("../img/nav-bg.png");
+		background-size: cover;
+		background-position: center top;
+	}	
+}
+@media(min-width:768px){
+	.navbar,
+	.navbar-default {
+		.nav,
+		.navbar-nav {
+			li > a {
+				font-size: 8pt;
+			}
+		}
+	}
+}
+@media (max-width: 767px) {
+	.navbar,
+	.navbar-default {
+		.navbar-header {
+			width: 99%;
+		}
+		.navbar-collapse,
+		.navbar-collapse.in {
+			padding: 0;
+			margin: 0;
+			border: 0;
+		}
+		.navbar-toggle {
+			color: #fff;
+			margin: 15px 25px;
+		}
+		.navbar-toggle:hover, 
+		.navbar-toggle:focus {
+			color: #000;
+			background: #fff url("../img/hash-light.png");
+		}
+		.navbar-brand {
+			background: url("../img/xero-graff-alt-lil.png") top center no-repeat;
+			width: 197px;
+			height: 86px;
+			margin-left: 14px;
+		}
+		.nav,
+		.navbar-nav{
+			background: #222;
+			margin: 0;
+			padding: 0;
+			li > a {
+				color: #fff;
+				font-weight: bold;
+				text-align: left;
+			}
+			li > a:hover,
+			li > a:focus {
+				color: $navActive;
+				background: #000;
+			}
+			>.active>a,
+			>.active>a:focus, 
+			>.active>a:hover {
+				color: $navHover;
+				background: #636363 url("../img/hash-dark.png");
+			}
+			li > a span.octicon,
+			li > a:hover span.octicon,
+			li > a:focus span.octicon,
+			>.active>a span.octicon,
+			>.active>a:focus span.octicon, 
+			>.active>a:hover span.octicon {
+				display: inline-block;
+				font-size: 16pt;
+				width: 30px;
+				text-align: center;
+			}			
+		}
+		.container {
+			background-image: url("../img/nav-bg-lil.png") no-repeat;
+			background-position: center center;
+			background-size: 120% auto;
+			padding: 0;			
+			.navbar-collapse {
+				border-bottom-color: #333;
+			}
+		}
+	}
+}
+@media (min-width: 768px) and (max-width: 991px) {
+	.navbar,
+	.navbar-default {
+		.navbar-brand {
+			background: url("../img/xero-graff-alt-lil.png") top center no-repeat;
+			width: 197px;
+			height: 86px;
+			margin-left: 14px;
+		}
+		.nav,
+		.navbar-nav{
+			margin-top: 6px;
+			margin-left: 170px;			
+			li > a span.octicon,
+			li > a:hover span.octicon,
+			li > a:focus span.octicon,
+			>.active>a span.octicon,
+			>.active>a:focus span.octicon, 
+			>.active>a:hover span.octicon {
+				font-size: 16pt;
+			}			
+		}
+		.container {
+			background-image: url("../img/nav-bg-lil.png");
+			background-position: center center;
+		}			
+	}
+}

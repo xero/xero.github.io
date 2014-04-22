@@ -1,30 +1,36 @@
 var xhrPool = [];
-var msgLoading = '<div class="alert alert-info alert-block"><h1><span class="mega-octicon octicon-hourglass"></span>&nbsp;loading</h1><p>accessing the github api...</p></div>';
+var msgLoading = '<div class="row"><div class="xs-col-12"><div class="alert alert-info alert-block"><h1><span class="mega-octicon octicon-hourglass"></span>&nbsp;loading</h1><p>accessing the github api...</p></div></div></div>';
 var msgSuccess = '<div class="alert alert-success alert-block"><h1><span class="mega-octicon octicon-issue-opened"></span>&nbsp;success!</h1><p>loaded data from the github api.</p></div>';
 var msgError = '<div class="alert alert-error alert-block"><h1><span class="mega-octicon octicon-issue-opened"></span>&nbsp;error!</h1><p>failed to load data from the github api.</p></div>';
 function init() {
 	overview();
-	$('#navActivity').click(function(){
+	$('#navActivity').on('click', function(){
+		menu(this);
 		abortAjax();
 		activity();
 	});
-	$('#navRepos').click(function(){
+	$('#navRepos').on('click', function(){
+		menu(this);
 		abortAjax();
 		repos();
 	});
-	$('#navOrgs').click(function(){
+	$('#navOrgs').on('click', function(){
+		menu(this);
 		abortAjax();
 		orgs();
 	});
-	$('#navGists').click(function(){
+	$('#navGists').on('click', function(){
+		menu(this);
 		abortAjax();
 		gists();
 	});
-	$('#navWatch').click(function(){
+	$('#navWatch').on('click', function(){
+		menu(this);
 		abortAjax();
 		following();
 	});
-	$('#navFollow').click(function(){
+	$('#navFollow').on('click', function(){
+		menu(this);
 		abortAjax();
 		followers();
 	});
@@ -57,17 +63,16 @@ function overview() {
 	);
 };
 function activity() {
-	$('#title').html('<h1>activity</h1>');
 	$('#body').html(msgLoading);
 	api(
 		'GET',
 		'https://api.github.com/users/xero/events',
 		'',
 		function(result){
-			var x = '<div class="container-fluid">';
+			var x = '<div class="container">';
 			$.each(result, function(i){
-				var user = '<a href="http://github.com/'+result[i].actor.login+'">'+result[i].actor.login+'</a>';
-				var repo = '<a href="http://github.com/'+result[i].repo.name+'">'+result[i].repo.name+'</a>';
+				var user = '<a href="https://github.com/'+result[i].actor.login+'">'+result[i].actor.login+'</a>';
+				var repo = '<a href="https://github.com/'+result[i].repo.name+'">'+result[i].repo.name+'</a>';
 				var date = timeAgo(new Date(result[i].created_at).getTime() / 1000);
 				var icon = 'octicon-mark-github';
 				var msg = '<br/>';
@@ -78,8 +83,8 @@ function activity() {
 					break;
 					case 'CommitCommentEvent':
 						icon = 'octicon-comment-discussion';
-						var body = result[i].payload.comment.body.length > 50 ? result[i].payload.comment.body.substring(0, 49)+'...' : result[i].comment.issue.body;
-						msg = '&nbsp;commented on commit: '+repo+' / <a href="'+result[i].payload.comment.html_url+'">'+result[i].payload.comment.title+'</a><br/><blockquote>'+body+'</blockquote>';
+						var body = result[i].payload.comment.body.length > 250 ? result[i].payload.comment.body.substring(0, 249)+'...' : result[i].payload.comment.body;
+						msg = '&nbsp;commented on commit: '+repo+' / <a href="'+result[i].payload.comment.html_url+'">'+result[i].payload.comment.commit_id.substring(0, 7)+'</a><br/><blockquote>'+body+'</blockquote>';
 					break;
 					case 'CreateEvent':
 						var type = result[i].payload.ref_type;
@@ -127,7 +132,7 @@ function activity() {
 					break;
 					case 'ForkEvent':
 						icon = 'octicon-repo-forked';
-						msg = '&nbsp;forked&nbsp;'+repo+'&nbsp;into&nbsp;<span class="well"><span class="octicon octicon-repo-forked"></span>&nbsp;<a href="http://github.com/'+result[i].payload.forkee.full_name+'">'+result[i].payload.forkee.full_name+'</a>&nbsp;</span><br/>';
+						msg = '&nbsp;forked&nbsp;'+repo+'&nbsp;into&nbsp;<span class="well"><span class="octicon octicon-repo-forked"></span>&nbsp;<a href="https://github.com/'+result[i].payload.forkee.full_name+'">'+result[i].payload.forkee.full_name+'</a>&nbsp;</span><br/>';
 					break;
 					case 'ForkApplyEvent':
 						icon = 'octicon-git-branch';
@@ -163,7 +168,7 @@ function activity() {
 					break;
 					case 'MemberEvent':
 						icon = 'octicon-person';
-						msg = '&nbsp;'+result[i].payload.action+'&nbsp;member&nbsp;<a href="http://github.com/'+result[i].payload.member.login+'">'+result[i].payload.member.login+'</a>&nbsp;to&nbsp;'+repo+'<br/>';
+						msg = '&nbsp;'+result[i].payload.action+'&nbsp;member&nbsp;<a href="https://github.com/'+result[i].payload.member.login+'">'+result[i].payload.member.login+'</a>&nbsp;to&nbsp;'+repo+'<br/>';
 					break;
 					case 'PublicEvent':
 						icon = 'octicon-megaphone';
@@ -179,7 +184,7 @@ function activity() {
 						icon = 'octicon-repo-push';
 						var ref = result[i].payload.ref.replace(/^.*\/(.*)$/, "$1");
 						var body = result[i].payload.commits[0].message.length > 250 ? result[i].payload.commits[0].message.substring(0, 249)+'...' : result[i].payload.commits[0].message;
-						msg = '&nbsp;pushed to&nbsp;<span class="well"><span class="octicon octicon-git-branch"></span>&nbsp;<a href="http://github.com/'+result[i].repo.name+'/tree/'+ref+'">'+ref+'</a>&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/><blockquote><a href="http://github.com/'+result[i].repo.html_url+'/commit/'+result[i].payload.commits[0].sha+'">'+result[i].payload.commits[0].sha.substring(0, 7)+'</a>&nbsp;'+body+'</blockquote>';
+						msg = '&nbsp;pushed to&nbsp;<span class="well"><span class="octicon octicon-git-branch"></span>&nbsp;<a href="https://github.com/'+result[i].repo.name+'/tree/'+ref+'">'+ref+'</a>&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/><blockquote><a href="https://github.com/'+result[i].repo.html_url+'/commit/'+result[i].payload.commits[0].sha+'">'+result[i].payload.commits[0].sha.substring(0, 7)+'</a>&nbsp;'+body+'</blockquote>';
 					break;
 					case 'TeamAddEvent':
 						icon = 'octicon-person-add';
@@ -189,9 +194,9 @@ function activity() {
 						msg = '&nbsp;started watching&nbsp;'+repo+'<br/>';
 					break;
 				}
-				x += '<div class="row-fluid"><div class="span1"><span class="mega-octicon '+icon+'"></span></div><div class="span11">'+user+msg+'<small>'+date+'</small><br/><br/></div></div>';
+				x += '<div class="row well"><div class="col-xs-1 icon"><span class="mega-octicon '+icon+'"></span></div><div class="col-xs-11"><div class="row"><div class="col-xs-12 msg">'+user+msg+'</div><div class="col-xs-12 date"><small>'+date+'</small></div></div></div></div>';
 			});
-			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
+			$('#body').html(x);
 		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
@@ -199,14 +204,13 @@ function activity() {
 	);
 };
 function repos() {
-	$('#title').html('<h1>repositories</h1>');
 	$('#body').html(msgLoading);
 	api(
 		'GET',
-		'https://api.github.com/users/xero/repos',
+		'https://api.github.com/users/xero/repos?sort=pushed',
 		'',
 		function(result){
-			var x = '<div class="container-fluid">';
+			var x = '<div class="container">';
 			$.each(result, function(i){
 				var name = result[i].name;
 				var url = result[i].html_url;
@@ -214,11 +218,12 @@ function repos() {
 				var watchers = result[i].watchers_count;
 				var forks = result[i].forks_count;
 				var isfork = result[i].fork===true?'repo-forked':'repo';
-				var date = result[i].created_at;
-				var update = result[i].updated_at;
-				x += '<div class="row-fluid"><div class="span1"><span class="octicon-repo mega-octicon octicon-'+isfork+'"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="octicon octicon-star fixed-width"></span>&nbsp;'+watchers+'<br/><span class="octicon octicon-git-branch fixed-width"></span>&nbsp;'+forks+'</div></div>';
+				var date = timeAgo(new Date(result[i].created_at).getTime() / 1000);
+				var update = timeAgo(new Date(result[i].updated_at).getTime() / 1000);
+
+				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-repo octicon-'+isfork+'"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+name+'</a></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'</blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small></div></div></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-star"></span>&nbsp;'+watchers+'</div><div class="line"><span class="octicon octicon-git-branch"></span>&nbsp;'+forks+'</div></aside></div></div>';
 			});
-			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
+			$('#body').html(x);
 		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
@@ -226,28 +231,26 @@ function repos() {
 	);
 };
 function orgs() {
-	$('#title').html('<h1>organizations</h1>');
 	$('#body').html(msgLoading);
 	api(
 		'GET',
 		'https://api.github.com/users/xero/orgs',
 		'',
 		function(result){
-			var x = '<div class="container-fluid">';
+			var x = '<div class="container">';
 			var j = 1;
 			$.each(result, function(i){
-				var name = result[i].login;
-				var img = '<a href="http://github.com/'+result[i].login+'"><img src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
+				var body = '<h4><a href="https://github.com/'+result[i].login+'">'+result[i].login+'</a></h4><a href="https://github.com/'+result[i].login+'"><img src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" width="80" height="80" /></a>';
 				if((j-1)%4 === 0){
-					x +='<div clas="row-fluid"><div class="span3"><h6>'+name+'</h6>'+img+'</div>';
+					x +='<div clas="row"><div class="col-xs-3"><div class="well small">'+body+'</div></div>';
 				} else if(j%4 === 0) {
-					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div></div>';
+					x+='<div class="col-xs-3"><div class="well small">'+body+'</div></div></div>';
 				} else {
-					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div>';
+					x+='<div class="col-xs-3"><div class="well small">'+body+'</div></div>';
 				}
 				++j;
 			});
-			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
+			$('#body').html(x);
 		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
@@ -255,19 +258,18 @@ function orgs() {
 	);
 };
 function gists() {
-	$('#title').html('<h1>gists</h1>');
 	$('#body').html(msgLoading);
 	api(
 		'GET',
 		'https://api.github.com/users/xero/gists',
 		'',
 		function(result){
-			var x = '<div class="container-fluid">';
+			var x = '<div class="container">';
 			$.each(result, function(i){
 				var url = result[i].html_url;
 				var descript = result[i].description;
-				var date = result[i].created_at;
-				var update = result[i].updated_at;
+				var date = timeAgo(new Date(result[i].created_at).getTime() / 1000);
+				var update = timeAgo(new Date(result[i].updated_at).getTime() / 1000);
 				var files = Object.keys(result[i].files).length;
 				var comments = result[i].comments;
 				var name = 'gist';
@@ -275,9 +277,9 @@ function gists() {
 					name = e.filename;
 					return;
 				});
-				x += '<div class="row-fluid"><div class="span1"><span class="mega-octicon octicon-gist"></span></div><div class="span9"><h3><a href="'+url+'">'+name+'</a></h3>'+descript+'<br/><small>created: '+date+'<br/>last update: '+update+'</small></div><div class="span2 move-down"><span class="octicon octicon-comment-discussion fixed-width"></span>&nbsp;'+comments+'<br/><span class="octicon octicon-gist fixed-width"></span>&nbsp;'+files+'<br/></div></div>';
+				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-gist"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+name+'</a></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'</blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small></div></div></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-comment-discussion"></span>&nbsp;'+comments+'</div><div class="line"><span class="octicon octicon-gist"></span>&nbsp;'+files+'</div></aside></div></div>';
 			});
-			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
+			$('#body').html(x);
 		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
@@ -285,28 +287,26 @@ function gists() {
 	);
 };
 function following() {
-	$('#title').html('<h1>following</h1>');
 	$('#body').html(msgLoading);
 	api(
 		'GET',
 		'https://api.github.com/users/xero/following',
 		'',
 		function(result){
-			var x = '<div class="container-fluid">';
+			var x = '<div class="container">';
 			var j = 1;
 			$.each(result, function(i){
-				var name = result[i].login;
-				var img = '<a href="http://github.com/'+result[i].login+'"><img width="80" height="80" src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
+				var body = '<h4><a href="https://github.com/'+result[i].login+'">'+result[i].login+'</a></h4><a href="https://github.com/'+result[i].login+'"><img width="80" height="80" src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
 				if((j-1)%4 === 0){
-					x +='<div clas="row-fluid"><div class="span3"><h6>'+name+'</h6>'+img+'</div>';
+					x +='<div clas="row"><div class="col-xs-3"><div class="well small">'+body+'</div></div>';
 				} else if(j%4 === 0) {
-					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div></div>';
+					x+='<div class="col-xs-3"><div class="well small">'+body+'</div></div></div>';
 				} else {
-					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div>';
+					x+='<div class="col-xs-3"><div class="well small">'+body+'</div></div>';
 				}
 				++j;
 			});
-			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
+			$('#body').html(x);
 		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
@@ -314,28 +314,26 @@ function following() {
 	);
 };
 function followers() {
-	$('#title').html('<h1>followers</h1>');
 	$('#body').html(msgLoading);
 	api(
 		'GET',
 		'https://api.github.com/users/xero/followers',
 		'',
 		function(result){
-			var x = '<div class="container-fluid">';
+			var x = '<div class="container">';
 			var j = 1;
 			$.each(result, function(i){
-				var name = result[i].login;
-				var img = '<a href="http://github.com/'+result[i].login+'"><img width="80" height="80" src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
+				var body = '<h4><a href="https://github.com/'+result[i].login+'">'+result[i].login+'</a></h4><a href="https://github.com/'+result[i].login+'"><img width="80" height="80" src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
 				if((j-1)%4 === 0){
-					x +='<div clas="row-fluid"><div class="span3"><h6>'+name+'</h6>'+img+'</div>';
+					x +='<div clas="row"><div class="col-xs-3"><div class="well small">'+body+'</div></div>';
 				} else if(j%4 === 0) {
-					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div></div>';
+					x +='<div class="col-xs-3"><div class="well small">'+body+'</div></div></div>';
 				} else {
-					x+='<div class="span3"><h6>'+name+'</h6>'+img+'</div>';
+					x +='<div class="col-xs-3"><div class="well small">'+body+'</div></div>';
 				}
 				++j;
 			});
-			$('#body').html(x+'<div class="row-fluid"><div class="span12">&nbsp;</div></div></div>');
+			$('#body').html(x);
 		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
@@ -366,6 +364,15 @@ function abortAjax() {
 		jqXHR.abort();
 	});
 };
+function menu(obj) {
+	$('#navActivity').removeClass('active');
+	$('#navRepos').removeClass('active');
+	$('#navOrgs').removeClass('active');
+	$('#navGists').removeClass('active');
+	$('#navWatch').removeClass('active');
+	$('#navFollow').removeClass('active');
+	$(obj).addClass('active');
+}
 function timeAgo(time){
 	var units = [
 		{ name: "second", limit: 60, in_seconds: 1 },
@@ -387,3 +394,7 @@ function timeAgo(time){
 		}
 	}
 }
+$(document).ready(function() {
+	init();
+	activity();
+});

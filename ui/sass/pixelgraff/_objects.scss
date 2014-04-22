@@ -1,0 +1,55 @@
+article {
+	blockquote {
+		margin: 0px;
+		padding: 5px 15px;
+		p {
+			font-size: 17px;
+			color: $wellFg;
+			display: inline-block;
+			background-color: $wellBg;
+			padding: 10px;
+			margin: 0px;
+		}
+		cite {
+			font-size: 17px;
+			display: block;
+			padding: 10px 0 25px 35px;
+			background: transparent;
+			background-image: url("../img/arrow-dark-half.png");
+			background-repeat: no-repeat;
+			background-position: 20px 0px;
+		}
+	}
+}
+
+.hero-unit, 
+.well,
+blockquote {
+    background: $wellBg;
+    color: $wellFg;
+    border: 1px inset #000;
+    padding: 15px;
+    @include box-shadow(black 0 0 23px 1px inset);
+    @include border-radius(0px);
+}
+.well.small {
+	text-align: center;
+	h4 {
+		margin-top: 0px;
+	}
+}
+
+%pixelated {
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -o-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	-ms-interpolation-mode: nearest-neighbor;
+}
+
+%vertical-align {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
