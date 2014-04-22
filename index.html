@@ -1,70 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="utf-8">
 		<title>xero.github.io</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="xero on github">
+		<meta name="description" content="playing with the public github api">
 		<meta name="author" content="xero harrison">
-		<link href="ui/css/bootstrap.css" rel="stylesheet">
-		<link href="ui/css/bootstrap-responsive.css" rel="stylesheet">
-		<link href="ui/css/gh.css" rel="stylesheet">
-		<link href="ui/css/octicons.css" rel="stylesheet">
-		<script type="text/javascript" src="ui/js/head.js"></script>
+	    <link rel="shortcut icon" href="ui/ico/favicon.ico">
+	    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ui/ico/icon-144.png">
+	    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ui/ico/icon-114.png">
+	    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ui/ico/icon-72.png">
+	    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="ui/ico/icon-57.png">
+	    <link rel="apple-touch-icon-precomposed" sizes="16x16" href="ui/ico/icon-16.png">
+		<link href="ui/css/app.css" rel="stylesheet">
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
-			<script src="ui/js/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 		<![endif]-->
-		<link rel="shortcut icon" href="favicon.ico">
 	</head>
 	<body>
 		<div id="wrap">
-			<nav class="navbar navbar-fixed-top navbar-inverse">
-				<div class="navbar-inner">
-					<div class="container">
-						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-							<i class="icon-bar"></i>
-							<i class="icon-bar"></i>
-							<i class="icon-bar"></i>
-						</a>
-						<a class="brand" href="http://github.com/xero"><span class="octicon octicon-octoface"></span>&nbsp;xero</a>
-						<div class="nav-collapse collapse">
-							<ul class="nav">
-								<li><a id="navActivity" href="#"><span class="octicon octicon-radio-tower"></span>&nbsp;activity</a></li>
-								<li><a id="navRepos" href="#"><span class="octicon octicon-repo"></span><span id="repoCount"></span>&nbsp;repos</a></li>
-								<li><a id="navGists" href="#"><span class="octicon octicon-gist"></span><span id="gistCount"></span>&nbsp;gists</a></li>
-								<li><a id="navOrgs" href="#"><span class="octicon octicon-jersey"></span><span id="orgCount"></span>&nbsp;organizations</a></li>
-								<li><a id="navWatch" href="#"><span class="octicon octicon-eye"></span><span id="watchCount"></span>&nbsp;following</a></li>
-								<li><a id="navFollow" href="#"><span class="octicon octicon-person"></span><span id="followCount"></span>&nbsp;followers</a></li>
-								<li><a id="navTip" href="https://www.gittip.com/xero/" target="_new"><span class="octicon octicon-beer"></span>&nbsp;gittip</a></li>
-							</ul>
-						</div>
+			<!-- Static navbar -->
+			<nav class="navbar navbar-default navbar-static-top" role="navigation">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+							<span class="sr-only">toggle navigation</span>
+							<span class="octicon octicon-three-bars"></span>
+						</button>
+						<a class="navbar-brand" href="#">&nbsp;</a>
 					</div>
+					<div class="navbar-collapse collapse">
+						<ul class="nav navbar-nav">
+							<li id="navActivity" class="active"><a href="#"><span class="octicon octicon-radio-tower"></span>&nbsp;activity</a></li>
+							<li id="navRepos"><a href="#"><span class="octicon octicon-repo"></span><span id="repoCount"></span>&nbsp;repos</a></li>
+							<li id="navGists"><a href="#"><span class="octicon octicon-gist"></span><span id="gistCount"></span>&nbsp;gists</a></li>
+							<li id="navOrgs"><a href="#"><span class="octicon octicon-jersey"></span><span id="orgCount"></span>&nbsp;orgs</a></li>
+							<li id="navWatch"><a href="#"><span class="octicon octicon-eye"></span><span id="watchCount"></span>&nbsp;following</a></li>
+							<li id="navFollow"><a href="#"><span class="octicon octicon-person"></span><span id="followCount"></span>&nbsp;followers</a></li>
+							<!-- li><a id="navTip" href="https://www.gittip.com/xero/" target="_new"><span class="octicon octicon-beer"></span>&nbsp;gittip</a></li -->
+						</ul>
+					</div><!--/.nav-collapse -->
 				</div>
-			</nav>			
-			<div class="container">
-				<header class="hero-unit">
-					<img src="ui/img/xero-pixel-graff.png" class="pull-right">
-					<span id="title"></span>
-				</header>
+			</nav>
+			<div id="push">&nbsp;</div>
+			<section class="container">
 				<span id="body"></span>
-			</div>
-			<div id="push"></div>
+			</section>
+			<div id="push">&nbsp;</div>
 		</div>
-		<footer id="footer">
+		<div id="footer">
 			<div class="container">
-				<p class="credit"><a href="http://creativecommons.org/licenses/by-sa/3.0/" target="_new"><img src="ui/img/cc.png" alt="creative commons - attribution-shareAlike 3.0 unported" title="creative commons - attribution-shareAlike 3.0 unported"></a>&nbsp;&nbsp;&nbsp;xero harrison&nbsp;&nbsp;&nbsp;<a href="http://xero.nu">http://xero.nu</a></p>
+				<span><a class="cc" href="http://creativecommons.org/licenses/by-sa/3.0/" target="_new" title="creative commons - attribution-shareAlike 3.0 unported"><span class="octicon octicon-cc"></span></a></span>
+				<cite><a href="http://xero.github.io/">xero.github.io</a> &nbsp;MMXIV&nbsp; <a href="http://whois.xero.nu/">xero harrison</a></cite>
 			</div>
-		</footer>
-		<script type="text/javascript">
-			head.js(
-				"ui/js/jq.js",
-				"ui/js/bootstrap.js",
-				"ui/js/gh.js",
-				function(){
-					init();
-					activity();
-				}
-			);
-		</script>
+		</div>
+		<script src="ui/js/libs.min.js"></script>
+		<script src="ui/js/app.min.js"></script>
 	</body>
 </html>
