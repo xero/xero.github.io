@@ -5,6 +5,8 @@ new personaly github subdomain site. i recreated the entire repo after the githu
 
 the site queries the github public api and creates an overview of my public github activity, repositories, gists, organizations, following, and followers.
 
+grunt/sass files for development are located in the `dev` branch
+
 ###fork it!
 
 __powered by:__
