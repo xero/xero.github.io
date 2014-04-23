@@ -1,7 +1,7 @@
 var xhrPool = [];
-var msgLoading = '<div class="row"><div class="xs-col-12"><div class="alert alert-info alert-block"><h1><span class="mega-octicon octicon-hourglass"></span>&nbsp;loading</h1><p>accessing the github api...</p></div></div></div>';
-var msgSuccess = '<div class="alert alert-success alert-block"><h1><span class="mega-octicon octicon-issue-opened"></span>&nbsp;success!</h1><p>loaded data from the github api.</p></div>';
-var msgError = '<div class="alert alert-error alert-block"><h1><span class="mega-octicon octicon-issue-opened"></span>&nbsp;error!</h1><p>failed to load data from the github api.</p></div>';
+	msgLoading = '<div class="row"><div class="xs-col-12"><div class="alert alert-info alert-block"><h1><span class="mega-octicon octicon-hourglass"></span>&nbsp;loading</h1><p>accessing the github api...</p></div></div></div>',
+	msgSuccess = '<div class="row"><div class="xs-col-12"><div class="alert alert-success alert-block"><h1><span class="mega-octicon octicon-issue-opened"></span>&nbsp;success!</h1><p>loaded data from the github api.</p></div></div></div>',
+	msgError = '<div class="row"><div class="xs-col-12"><div class="alert alert-error alert-block"><h1><span class="mega-octicon octicon-issue-opened"></span>&nbsp;error!</h1><p>failed to load data from the github api.</p></div></div></div>';
 function init() {
 	overview();
 	$('#navActivity').on('click', function(){
@@ -71,11 +71,11 @@ function activity() {
 		function(result){
 			var x = '<div class="container">';
 			$.each(result, function(i){
-				var user = '<a href="https://github.com/'+result[i].actor.login+'">'+result[i].actor.login+'</a>';
-				var repo = '<a href="https://github.com/'+result[i].repo.name+'">'+result[i].repo.name+'</a>';
-				var date = timeAgo(new Date(result[i].created_at).getTime() / 1000);
-				var icon = 'octicon-mark-github';
-				var msg = '<br/>';
+				var user = '<a href="https://github.com/'+result[i].actor.login+'">'+result[i].actor.login+'</a>',
+					repo = '<a href="https://github.com/'+result[i].repo.name+'">'+result[i].repo.name+'</a>',
+					date = timeAgo(new Date(result[i].created_at).getTime() / 1000),
+					icon = 'octicon-mark-github',
+					msg = '<br/>';
 				switch(result[i].type) {
 					case 'ReleaseEvent':
 						icon = 'octicon-package';
@@ -105,8 +105,8 @@ function activity() {
 						}
 					break;
 					case 'DeleteEvent':
-						var ref = result[i].payload.ref;
-						var type = result[i].payload.ref_type;
+						var ref = result[i].payload.ref,
+							type = result[i].payload.ref_type;
 						switch(type) {
 							case 'branch':
 								icon = 'octicon-git-branch-delete';
@@ -150,8 +150,8 @@ function activity() {
 						icon = 'octicon-comment-add';
 					break;
 					case 'IssuesEvent':
-						var action = result[i].payload.action;
-						var body = result[i].payload.issue.body.length > 250 ? result[i].payload.issue.body.substring(0, 249)+'...' : result[i].payload.issue.body;
+						var action = result[i].payload.action,
+							body = result[i].payload.issue.body.length > 250 ? result[i].payload.issue.body.substring(0, 249)+'...' : result[i].payload.issue.body;
 						msg = '&nbsp;'+action+'&nbsp;issue&nbsp;'+repo+'&nbsp;/&nbsp;<a href="'+result[i].payload.issue.html_url+'">'+result[i].payload.issue.title+'</a><blockquote>'+body+'</blockquote>';
 						switch(action) {
 							case 'reopened':
@@ -182,12 +182,13 @@ function activity() {
 					break;
 					case 'PushEvent':
 						icon = 'octicon-repo-push';
-						var ref = result[i].payload.ref.replace(/^.*\/(.*)$/, "$1");
-						var body = '';
-						var count = result[i].payload.distinct_size;
-						var ii = 1;
-						var first = result[i].payload.commits[0].sha.substring(0, 10);
-						var last = result[i].payload.commits[count-1].sha.substring(0, 10)
+						var ref = result[i].payload.ref.replace(/^.*\/(.*)$/, "$1"),
+							body = '',
+							count = result[i].payload.distinct_size,
+							commit = count === 1 ? 'commit' : 'commits',
+							ii = 1,
+							first = result[i].payload.commits[0].sha.substring(0, 10),
+							last = result[i].payload.commits[count-1].sha.substring(0, 10)
 						if(count === 1) {
 							body += '<blockquote><a href="https://github.com/'+result[i].repo.name+'/commit/'+result[i].payload.commits[ii-1].sha+'">'+result[i].payload.commits[ii-1].sha.substring(0, 10)+'</a>&nbsp;'+(result[i].payload.commits[ii-1].message.length > 250 ? result[i].payload.commits[ii-1].message.substring(0, 249)+'...' : result[i].payload.commits[ii-1].message)+'</blockquote>';
 						} else if(count > 4) {
@@ -203,7 +204,8 @@ function activity() {
 							}
 							body += '<a href="https://github.com/'+result[i].repo.name+'/compare/'+first+'...'+last+'">compare these commits &raquo;</a>';
 						}
-						msg = '&nbsp;pushed&nbsp;'+count+'&nbsp;commits to&nbsp;<span class="well"><span class="octicon octicon-git-branch"></span>&nbsp;<a href="https://github.com/'+result[i].repo.name+'/tree/'+ref+'">'+ref+'</a>&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/>'+body;
+
+						msg = '&nbsp;pushed&nbsp;'+count+'&nbsp;'+commit+' to&nbsp;<span class="well"><span class="octicon octicon-git-branch"></span>&nbsp;<a href="https://github.com/'+result[i].repo.name+'/tree/'+ref+'">'+ref+'</a>&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/>'+body;
 					break;
 					case 'TeamAddEvent':
 						icon = 'octicon-person-add';
@@ -231,14 +233,14 @@ function repos() {
 		function(result){
 			var x = '<div class="container">';
 			$.each(result, function(i){
-				var name = result[i].name;
-				var url = result[i].html_url;
-				var descript = result[i].description;
-				var watchers = result[i].watchers_count;
-				var forks = result[i].forks_count;
-				var isfork = result[i].fork===true?'repo-forked':'repo';
-				var date = timeAgo(new Date(result[i].created_at).getTime() / 1000);
-				var update = timeAgo(new Date(result[i].updated_at).getTime() / 1000);
+				var name = result[i].name,
+					url = result[i].html_url,
+					descript = result[i].description,
+					watchers = result[i].watchers_count,
+					forks = result[i].forks_count,
+					isfork = result[i].fork===true?'repo-forked':'repo',
+					date = timeAgo(new Date(result[i].created_at).getTime() / 1000),
+					update = timeAgo(new Date(result[i].updated_at).getTime() / 1000);
 				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-repo octicon-'+isfork+'"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+name+'</a></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'</blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small></div></div></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-star"></span>&nbsp;'+watchers+'</div><div class="line"><span class="octicon octicon-git-branch"></span>&nbsp;'+forks+'</div></aside></div></div>';
 			});
 			$('#body').html(x);
@@ -255,8 +257,8 @@ function orgs() {
 		'https://api.github.com/users/xero/orgs',
 		'',
 		function(result){
-			var x = '<div class="container">';
-			var j = 1;
+			var x = '<div class="container">',
+				j = 1;
 			$.each(result, function(i){
 				var body = '<h4><a href="https://github.com/'+result[i].login+'">'+result[i].login+'</a></h4><a href="https://github.com/'+result[i].login+'"><img src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" width="80" height="80" /></a>';
 				if((j-1)%4 === 0){
@@ -284,13 +286,13 @@ function gists() {
 		function(result){
 			var x = '<div class="container">';
 			$.each(result, function(i){
-				var url = result[i].html_url;
-				var descript = result[i].description;
-				var date = timeAgo(new Date(result[i].created_at).getTime() / 1000);
-				var update = timeAgo(new Date(result[i].updated_at).getTime() / 1000);
-				var files = Object.keys(result[i].files).length;
-				var comments = result[i].comments;
-				var name = 'gist';
+				var url = result[i].html_url,
+					descript = result[i].description,
+					date = timeAgo(new Date(result[i].created_at).getTime() / 1000),
+					update = timeAgo(new Date(result[i].updated_at).getTime() / 1000),
+					files = Object.keys(result[i].files).length,
+					comments = result[i].comments,
+					name = 'gist';
 				$.each(result[i].files, function(i, e){
 					name = e.filename;
 					return;
@@ -311,8 +313,8 @@ function following() {
 		'https://api.github.com/users/xero/following',
 		'',
 		function(result){
-			var x = '<div class="container">';
-			var j = 1;
+			var x = '<div class="container">',
+				j = 1;
 			$.each(result, function(i){
 				var body = '<h4><a href="https://github.com/'+result[i].login+'">'+result[i].login+'</a></h4><a href="https://github.com/'+result[i].login+'"><img width="80" height="80" src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
 				if((j-1)%4 === 0){
@@ -338,8 +340,8 @@ function followers() {
 		'https://api.github.com/users/xero/followers',
 		'',
 		function(result){
-			var x = '<div class="container">';
-			var j = 1;
+			var x = '<div class="container">',
+				j = 1;
 			$.each(result, function(i){
 				var body = '<h4><a href="https://github.com/'+result[i].login+'">'+result[i].login+'</a></h4><a href="https://github.com/'+result[i].login+'"><img width="80" height="80" src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
 				if((j-1)%4 === 0){
