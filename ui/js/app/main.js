@@ -84,7 +84,7 @@ function activity() {
 					case 'CommitCommentEvent':
 						icon = 'octicon-comment-discussion';
 						var body = result[i].payload.comment.body.length > 250 ? result[i].payload.comment.body.substring(0, 249)+'...' : result[i].payload.comment.body;
-						msg = '&nbsp;commented on commit: '+repo+' / <a href="'+result[i].payload.comment.html_url+'">'+result[i].payload.comment.commit_id.substring(0, 7)+'</a><br/><blockquote>'+body+'</blockquote>';
+						msg = '&nbsp;commented on commit: '+repo+' / <a href="'+result[i].payload.comment.html_url+'">'+result[i].payload.comment.commit_id.substring(0, 10)+'</a><br/><blockquote>'+body+'</blockquote>';
 					break;
 					case 'CreateEvent':
 						var type = result[i].payload.ref_type;
@@ -175,7 +175,7 @@ function activity() {
 					break;
 					case 'PullRequestEvent':
 						icon = 'octicon-git-pull-request';
-						msg = '&nbsp;'+result[i].payload.action+'&nbsp; a pull request:&nbsp;<a href="'+result[i].payload.pull_request.html_url+'">'+result[i].repo.name+'/#'+result[i].payload.number+'</a><br/><blockquote><a href="'+result[i].payload.pull_request.head.repo.html_url+'/commit/'+result[i].payload.pull_request.head.sha+'">'+result[i].payload.pull_request.head.sha.substring(0, 7)+'</a>&nbsp;'+result[i].payload.pull_request.title+'</blockquote>';
+						msg = '&nbsp;'+result[i].payload.action+'&nbsp; a pull request:&nbsp;<a href="'+result[i].payload.pull_request.html_url+'">'+result[i].repo.name+'/#'+result[i].payload.number+'</a><br/><blockquote><a href="'+result[i].payload.pull_request.head.repo.html_url+'/commit/'+result[i].payload.pull_request.head.sha+'">'+result[i].payload.pull_request.head.sha.substring(0, 10)+'</a>&nbsp;'+result[i].payload.pull_request.title+'</blockquote>';
 					break;
 					case 'PullRequestReviewCommentEvent':
 						icon = 'octicon-comment';
@@ -183,8 +183,27 @@ function activity() {
 					case 'PushEvent':
 						icon = 'octicon-repo-push';
 						var ref = result[i].payload.ref.replace(/^.*\/(.*)$/, "$1");
-						var body = result[i].payload.commits[0].message.length > 250 ? result[i].payload.commits[0].message.substring(0, 249)+'...' : result[i].payload.commits[0].message;
-						msg = '&nbsp;pushed to&nbsp;<span class="well"><span class="octicon octicon-git-branch"></span>&nbsp;<a href="https://github.com/'+result[i].repo.name+'/tree/'+ref+'">'+ref+'</a>&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/><blockquote><a href="https://github.com/'+result[i].repo.html_url+'/commit/'+result[i].payload.commits[0].sha+'">'+result[i].payload.commits[0].sha.substring(0, 7)+'</a>&nbsp;'+body+'</blockquote>';
+						var body = '';
+						var count = result[i].payload.distinct_size;
+						var ii = 1;
+						var first = result[i].payload.commits[0].sha.substring(0, 10);
+						var last = result[i].payload.commits[count-1].sha.substring(0, 10)
+						if(count === 1) {
+							body += '<blockquote><a href="https://github.com/'+result[i].repo.name+'/commit/'+result[i].payload.commits[ii-1].sha+'">'+result[i].payload.commits[ii-1].sha.substring(0, 10)+'</a>&nbsp;'+(result[i].payload.commits[ii-1].message.length > 250 ? result[i].payload.commits[ii-1].message.substring(0, 249)+'...' : result[i].payload.commits[ii-1].message)+'</blockquote>';
+						} else if(count > 4) {
+							while(ii <= 5) {
+								body += '<blockquote><a href="https://github.com/'+result[i].repo.name+'/commit/'+result[i].payload.commits[ii-1].sha+'">'+result[i].payload.commits[ii-1].sha.substring(0, 10)+'</a>&nbsp;'+(result[i].payload.commits[ii-1].message.length > 250 ? result[i].payload.commits[ii-1].message.substring(0, 249)+'...' : result[i].payload.commits[ii-1].message)+'</blockquote>';
+								ii++;
+							}
+							body += '<a href="https://github.com/'+result[i].repo.name+'/compare/'+first+'...'+last+'">compare these commits and '+(count-5)+' others &raquo;</a>';
+						} else {
+							while(ii <= count) {
+								body += '<blockquote><a href="https://github.com/'+result[i].repo.name+'/commit/'+result[i].payload.commits[ii-1].sha+'">'+result[i].payload.commits[ii-1].sha.substring(0, 10)+'</a>&nbsp;'+(result[i].payload.commits[ii-1].message.length > 250 ? result[i].payload.commits[ii-1].message.substring(0, 249)+'...' : result[i].payload.commits[ii-1].message)+'</blockquote>';
+								ii++;
+							}
+							body += '<a href="https://github.com/'+result[i].repo.name+'/compare/'+first+'...'+last+'">compare these commits &raquo;</a>';
+						}
+						msg = '&nbsp;pushed&nbsp;'+count+'&nbsp;commits to&nbsp;<span class="well"><span class="octicon octicon-git-branch"></span>&nbsp;<a href="https://github.com/'+result[i].repo.name+'/tree/'+ref+'">'+ref+'</a>&nbsp;</span>&nbsp;at&nbsp;'+repo+'<br/>'+body;
 					break;
 					case 'TeamAddEvent':
 						icon = 'octicon-person-add';
@@ -220,7 +239,6 @@ function repos() {
 				var isfork = result[i].fork===true?'repo-forked':'repo';
 				var date = timeAgo(new Date(result[i].created_at).getTime() / 1000);
 				var update = timeAgo(new Date(result[i].updated_at).getTime() / 1000);
-
 				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-repo octicon-'+isfork+'"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+name+'</a></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'</blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small></div></div></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-star"></span>&nbsp;'+watchers+'</div><div class="line"><span class="octicon octicon-git-branch"></span>&nbsp;'+forks+'</div></aside></div></div>';
 			});
 			$('#body').html(x);
