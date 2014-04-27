@@ -1,7 +1,7 @@
 {
   "name": "pixelgraff",
   "author": "xero",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "pixelgraff bootstrap theme dev",
   "dependencies": {
     "grunt": "~0.4.2",

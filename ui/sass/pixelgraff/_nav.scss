@@ -1,3 +1,10 @@
+.pixelated {
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -o-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	-ms-interpolation-mode: nearest-neighbor;
+}
+
 .navbar,
 .navbar-default {
 	background: #222;
@@ -21,7 +28,6 @@
 			color: $navDefault;
 			font-weight: bold;
 			text-align: center;
-			@extend %pixelated;
 		}
 		li > a:hover,
 		li > a:focus {
@@ -30,6 +36,7 @@
 		>.active>a,
 		>.active>a:focus, 
 		>.active>a:hover {
+			@extend .pixelated;
 			color: $navActive;
 			background: url("../img/arrow-light.png") bottom center no-repeat;
 		}
@@ -44,6 +51,7 @@
 		}
 	}
 	.container {
+		@extend .pixelated;
 		background-image: url("../img/nav-bg.png");
 		background-size: cover;
 		background-position: center top;

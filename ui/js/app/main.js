@@ -277,6 +277,7 @@ function orgs() {
 		}
 	);
 };
+/*
 function gists() {
 	$('#body').html(msgLoading);
 	api(
@@ -291,13 +292,85 @@ function gists() {
 					date = timeAgo(new Date(result[i].created_at).getTime() / 1000),
 					update = timeAgo(new Date(result[i].updated_at).getTime() / 1000),
 					files = Object.keys(result[i].files).length,
-					comments = result[i].comments,
-					name = 'gist';
+					comments = result[i].comments;
+				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-gist"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+url+'</a></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'</blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small><hr/></div></div><span id="gist-'+i+'"></span></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-comment-discussion"></span>&nbsp;'+comments+'</div><div class="line"><span class="octicon octicon-gist"></span>&nbsp;'+files+'</div></aside></div></div>';
+				api(
+					'GET',
+					'https://api.github.com/gists/'+result[i].id,
+					'', 
+					function(result){
+						var xx = '';
+						$.each(result.files, function(ii, e){
+							var name = e.filename,
+								raw_url = e.raw_url,
+								size = humanFileSize(e.size),
+								language = !e.language ? e.type : e.language,
+								content = e.content;
+							xx += '<div class="row file"><div class="col-xs-12"><h4><a href="'+raw_url+'">'+name+'</a><strong>'+size+'</strong><em>'+language+'</em></h4><pre><code>'+content+'</code></pre></div></div>';
+						});
+						$('#gist-'+i).html(xx);
+					}, 
+					function(xhr, status, thrown){
+						$('#gist-'+i).html(msgError);
+					}
+				);
+			});
+			$('#body').html(x);
+		},
+		function(xhr, status, thrown){
+			$('#body').html(msgError);
+		}
+	);
+};
+*/
+function gists() {
+	$('#body').html(msgLoading);
+	api(
+		'GET',
+		'https://api.github.com/users/xero/gists',
+		'',
+		function(result){
+			var x = '<div class="container">',
+				total = result.length;
+			$.each(result, function(i){
+				var name = '',
+					url = result[i].html_url,
+					descript = result[i].description,
+					date = timeAgo(new Date(result[i].created_at).getTime() / 1000),
+					update = timeAgo(new Date(result[i].updated_at).getTime() / 1000),
+					files = Object.keys(result[i].files).length,
+					comments = result[i].comments;
 				$.each(result[i].files, function(i, e){
 					name = e.filename;
-					return;
 				});
-				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-gist"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+name+'</a></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'</blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small></div></div></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-comment-discussion"></span>&nbsp;'+comments+'</div><div class="line"><span class="octicon octicon-gist"></span>&nbsp;'+files+'</div></aside></div></div>';
+				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-gist"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+name+'</a></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'</blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small><hr/></div></div><span id="gist-'+i+'"></span></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-comment-discussion"></span>&nbsp;'+comments+'</div><div class="line"><span class="octicon octicon-gist"></span>&nbsp;'+files+'</div></aside></div></div>';
+				api(
+					'GET',
+					'https://api.github.com/gists/'+result[i].id,
+					'', 
+					function(result){
+						var xx = '',
+							file = 0;
+						$.each(result.files, function(ii, e){
+							var name = e.filename,
+								raw_url = e.raw_url,
+								size = humanFileSize(e.size),
+								language = !e.language ? e.type : e.language,
+								content = e.content.length > 6000 ? 
+									'<pre><code>'+escapeHTML(e.content.substring(0, 6000))+'\n\n... </code></pre><a href="'+e.raw_url+'">view the entire file</a>' :
+									'<pre><code>'+escapeHTML(e.content)+'</code></pre>';
+							file++;
+							xx += '<div class="row file"><div class="col-xs-12"><h4><a href="'+raw_url+'">'+name+'</a><strong>'+size+'</strong><em>'+language+'</em></h4>'+content+'</div></div>';
+						});
+						$('#gist-'+i).html(xx);
+						if(i+1 === total) {
+							hljs.initHighlighting();
+						}
+					}, 
+					function(xhr, status, thrown){
+						$('#gist-'+i).html(msgError);
+					}
+				);
 			});
 			$('#body').html(x);
 		},
@@ -393,6 +466,10 @@ function menu(obj) {
 	$('#navFollow').removeClass('active');
 	$(obj).addClass('active');
 }
+function humanFileSize(size) {
+	var i = Math.floor( Math.log(size) / Math.log(1024) );
+	return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+};
 function timeAgo(time){
 	var units = [
 		{ name: "second", limit: 60, in_seconds: 1 },
@@ -414,6 +491,16 @@ function timeAgo(time){
 		}
 	}
 }
+var escapeHTML = (function () {
+    'use strict';
+    var chr = {
+        '"': '&quot;', '&': '&amp;', "'": '&#39;',
+        '/': '&#47;',  '<': '&lt;',  '>': '&gt;'
+    };
+    return function (text) {
+        return text.replace(/[\"&'\/<>]/g, function (a) { return chr[a]; });
+    };
+}());
 $(document).ready(function() {
 	init();
 	activity();

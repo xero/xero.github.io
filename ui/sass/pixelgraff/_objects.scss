@@ -38,14 +38,12 @@ blockquote {
 		margin-top: 0px;
 	}
 }
-
-%pixelated {
-	image-rendering: -moz-crisp-edges;
-	image-rendering: -o-crisp-edges;
-	image-rendering: -webkit-optimize-contrast;
-	-ms-interpolation-mode: nearest-neighbor;
+pre,
+code {
+	@include border-radius(0px);
+	background-color: #23241F;
+	border-color: #23241F;
 }
-
 %vertical-align {
   position: relative;
   top: 50%;

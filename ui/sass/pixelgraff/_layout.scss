@@ -37,14 +37,12 @@ a:visited {
 
 			.mega-octicon {
 				@extend %vertical-align;
-				@extend %pixelated;
 			}
 		}
 		.msg {
 			.well {
 				padding: 6px;
 				color: $wellLink;
-				@extend %pixelated;
 
 				a,
 				a:visited {
@@ -87,7 +85,22 @@ a:visited {
 
 			aside {
 				@extend %vertical-align;
-				@extend %pixelated;
+			}
+		}
+	}
+	.row.file {
+		h4 {
+
+			em {
+				font-size: 8pt;
+				color: $quoteLink;
+				float: right;
+			}
+			strong {
+				font-weight: normal;
+				font-size: 9pt;
+				color: #444;
+				padding-left: 10px;
 			}
 		}
 	}

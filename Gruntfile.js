@@ -24,7 +24,8 @@ module.exports = function(grunt) {
 			libs: {
 				src: [
 					'<%= meta.jsLibPath %>jq.js',
-					'<%= meta.jsLibPath %>bootstrap.js'
+					'<%= meta.jsLibPath %>bootstrap.js',
+					'<%= meta.jsLibPath %>highlight.js'
 				],
 				dest: '<%= meta.jsPath %>libs.min.js'
 			},
@@ -63,6 +64,15 @@ module.exports = function(grunt) {
 					ext: '.css'
 				}]
 			},
+			highlight: {
+				files: [{
+					expand: true,
+					cwd: '<%= meta.sassPath %>highlight',
+					src: ['*.scss'],
+					dest: '<%= meta.cssPath %>',
+					ext: '.css'
+				}]
+			},
 			octicons: {
 				files: [{
 					expand: true,
@@ -82,6 +92,7 @@ module.exports = function(grunt) {
 					[
 						"<%= meta.cssPath %>bootstrap.css",
 						"<%= meta.cssPath %>pixelgraff.css",
+						"<%= meta.cssPath %>highlight.css",
 						"<%= meta.cssPath %>octicons.css"
 					]
 				}
@@ -94,6 +105,7 @@ module.exports = function(grunt) {
 				src: [
 					"<%= meta.cssPath %>bootstrap.css",
 					"<%= meta.cssPath %>pixelgraff.css",
+					"<%= meta.cssPath %>highlight.css",
 					"<%= meta.cssPath %>octicons.css"
 				]
 			}

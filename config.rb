@@ -2,7 +2,7 @@
 
 http_path = "/"
 css_dir = "ui/css"
-sass_dir = "ui/css/sass"
+sass_dir = "ui/sass"
 images_dir = "ui/img"
 fonts_dir = "ui/fonts"
 javascripts_dir = "ui/js"
