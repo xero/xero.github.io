@@ -235,13 +235,16 @@ function repos() {
 			$.each(result, function(i){
 				var name = result[i].name,
 					url = result[i].html_url,
+					language = result[i].language,
+					zipball = result[i].owner.html_url+'/'+result[i].name+'/archive/master.zip',
+					tarball = result[i].owner.html_url+'/'+result[i].name+'/archive/master.tar.gz',
 					descript = result[i].description,
 					watchers = result[i].watchers_count,
 					forks = result[i].forks_count,
 					isfork = result[i].fork===true?'repo-forked':'repo',
 					date = timeAgo(new Date(result[i].created_at).getTime() / 1000),
 					update = timeAgo(new Date(result[i].updated_at).getTime() / 1000);
-				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-repo octicon-'+isfork+'"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+name+'</a></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'</blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small></div></div></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-star"></span>&nbsp;'+watchers+'</div><div class="line"><span class="octicon octicon-git-branch"></span>&nbsp;'+forks+'</div></aside></div></div>';
+				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-repo octicon-'+isfork+'"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+name+'</a><em>'+language+'</em></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'<br/><footer><span class="octicon octicon-file-zip"></span>&nbsp;&nbsp;<a href="'+zipball+'">zip</a>&nbsp;/&nbsp;<a href="'+tarball+'">tar</a></footer></blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small></div></div></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-star"></span>&nbsp;'+watchers+'</div><div class="line"><span class="octicon octicon-git-branch"></span>&nbsp;'+forks+'</div></aside></div></div>';
 			});
 			$('#body').html(x);
 		},
@@ -277,52 +280,6 @@ function orgs() {
 		}
 	);
 };
-/*
-function gists() {
-	$('#body').html(msgLoading);
-	api(
-		'GET',
-		'https://api.github.com/users/xero/gists',
-		'',
-		function(result){
-			var x = '<div class="container">';
-			$.each(result, function(i){
-				var url = result[i].html_url,
-					descript = result[i].description,
-					date = timeAgo(new Date(result[i].created_at).getTime() / 1000),
-					update = timeAgo(new Date(result[i].updated_at).getTime() / 1000),
-					files = Object.keys(result[i].files).length,
-					comments = result[i].comments;
-				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-gist"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+url+'</a></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'</blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small><hr/></div></div><span id="gist-'+i+'"></span></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-comment-discussion"></span>&nbsp;'+comments+'</div><div class="line"><span class="octicon octicon-gist"></span>&nbsp;'+files+'</div></aside></div></div>';
-				api(
-					'GET',
-					'https://api.github.com/gists/'+result[i].id,
-					'', 
-					function(result){
-						var xx = '';
-						$.each(result.files, function(ii, e){
-							var name = e.filename,
-								raw_url = e.raw_url,
-								size = humanFileSize(e.size),
-								language = !e.language ? e.type : e.language,
-								content = e.content;
-							xx += '<div class="row file"><div class="col-xs-12"><h4><a href="'+raw_url+'">'+name+'</a><strong>'+size+'</strong><em>'+language+'</em></h4><pre><code>'+content+'</code></pre></div></div>';
-						});
-						$('#gist-'+i).html(xx);
-					}, 
-					function(xhr, status, thrown){
-						$('#gist-'+i).html(msgError);
-					}
-				);
-			});
-			$('#body').html(x);
-		},
-		function(xhr, status, thrown){
-			$('#body').html(msgError);
-		}
-	);
-};
-*/
 function gists() {
 	$('#body').html(msgLoading);
 	api(

@@ -58,6 +58,12 @@ a:visited {
 				a:visited {
 					color: $quoteLink;
 				}
+				footer {
+					display: block;
+					text-align: right;
+					padding-top: 4px;
+					color: $dlFg;
+				}
 			}
 		}
 		.date {
@@ -65,6 +71,15 @@ a:visited {
 		}
 	}
 	.row.well.repo {
+		h3 {
+
+			em {
+				color: #444;
+				font-size: 16px;
+				font-weight: normal;
+				padding-left: 10px;
+			}
+		}
 		.icon {
 			height: 80px;
 		}
