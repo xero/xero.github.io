@@ -184,11 +184,11 @@ function activity() {
 						icon = 'octicon-repo-push';
 						var ref = result[i].payload.ref.replace(/^.*\/(.*)$/, "$1"),
 							body = '',
-							count = result[i].payload.distinct_size,
+							count = result[i].payload.commits.length,//result[i].payload.distinct_size, #BUG distinct_size = 0 if you push someone else's upstream commits to your fork repo.
 							commit = count === 1 ? 'commit' : 'commits',
 							ii = 1,
 							first = result[i].payload.commits[0].sha.substring(0, 10),
-							last = result[i].payload.commits[count-1].sha.substring(0, 10)
+							last = result[i].payload.commits[count-1].sha.substring(0, 10);
 						if(count === 1) {
 							body += '<blockquote><a href="https://github.com/'+result[i].repo.name+'/commit/'+result[i].payload.commits[ii-1].sha+'">'+result[i].payload.commits[ii-1].sha.substring(0, 10)+'</a>&nbsp;'+(result[i].payload.commits[ii-1].message.length > 250 ? result[i].payload.commits[ii-1].message.substring(0, 249)+'...' : result[i].payload.commits[ii-1].message)+'</blockquote>';
 						} else if(count > 4) {
