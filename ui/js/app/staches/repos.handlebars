@@ -1,0 +1,41 @@
+<div class="row well repo">
+	<div class="col-xs-1 icon">
+		<span class="mega-octicon octicon-repo octicon-{{isfork}}"></span>
+	</div>
+	<div class="col-xs-10">
+		<div class="row">
+			<div class="col-xs-12">
+				<h3><a href="{{url}}">{{name}}</a><em>{{language}}</em></h3>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 msg">
+				<blockquote>{{descript}}<br/>
+					<footer>
+						<span class="octicon octicon-file-zip"></span>&nbsp;&nbsp;<a href="{{zipball}}">zip</a>&nbsp;/&nbsp;<a href="{{tarball}}">tar</a>
+					</footer>
+				</blockquote>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 date">
+				<small>created: {{date}}</small>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 date">
+				<small>updated: {{update}}</small>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-1 meta">
+		<aside>
+			<div class="line">
+				<span class="octicon octicon-star"></span>&nbsp;{{watchers}}
+			</div>
+			<div class="line">
+				<span class="octicon octicon-git-branch"></span>&nbsp;{{forks}}
+			</div>
+		</aside>
+	</div>
+</div>

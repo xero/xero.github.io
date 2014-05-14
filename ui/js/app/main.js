@@ -1,7 +1,7 @@
 var xhrPool = [];
-	msgLoading = '<div class="row"><div class="xs-col-12"><div class="alert alert-info alert-block"><h1><span class="mega-octicon octicon-hourglass"></span>&nbsp;loading</h1><p>accessing the github api...</p></div></div></div>',
-	msgSuccess = '<div class="row"><div class="xs-col-12"><div class="alert alert-success alert-block"><h1><span class="mega-octicon octicon-issue-opened"></span>&nbsp;success!</h1><p>loaded data from the github api.</p></div></div></div>',
-	msgError = '<div class="row"><div class="xs-col-12"><div class="alert alert-error alert-block"><h1><span class="mega-octicon octicon-issue-opened"></span>&nbsp;error!</h1><p>failed to load data from the github api.</p></div></div></div>';
+	msgLoading = Handlebars.templates['loadingMsg'],
+	msgSuccess = Handlebars.templates['successMsg'],
+	msgError = Handlebars.templates['errorMsg'];
 function init() {
 	overview();
 	$('#navActivity').on('click', function(){
@@ -41,10 +41,10 @@ function overview() {
 		'https://api.github.com/users/xero',
 		'',
 		function(result){
-			$('#repoCount').html('&nbsp;'+ result.public_repos);
-			$('#gistCount').html('&nbsp;'+result.public_gists);
-			$('#watchCount').html('&nbsp;'+result.following);
-			$('#followCount').html('&nbsp;'+result.followers);
+			$('#repoCount').html(result.public_repos);
+			$('#gistCount').html(result.public_gists);
+			$('#watchCount').html(result.following);
+			$('#followCount').html(result.followers);
 		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
@@ -55,7 +55,7 @@ function overview() {
 		'https://api.github.com/users/xero/orgs',
 		'',
 		function(result){
-			$('#orgCount').html('&nbsp;'+result.length);
+			$('#orgCount').html(result.length);
 		},
 		function(xhr, status, thrown){
 			$('#body').html(msgError);
@@ -63,6 +63,7 @@ function overview() {
 	);
 };
 function activity() {
+	var userActivity = Handlebars.templates['activity'];
 	$('#body').html(msgLoading);
 	api(
 		'GET',
@@ -215,7 +216,12 @@ function activity() {
 						msg = '&nbsp;started watching&nbsp;'+repo+'<br/>';
 					break;
 				}
-				x += '<div class="row well"><div class="col-xs-1 icon"><span class="mega-octicon '+icon+'"></span></div><div class="col-xs-11"><div class="row"><div class="col-xs-12 msg">'+user+msg+'</div><div class="col-xs-12 date"><small>'+date+'</small></div></div></div></div>';
+				x += userActivity({ 
+					icon: icon,
+					user: user,
+					msg: msg,
+					date: date
+				});
 			});
 			$('#body').html(x);
 		},
@@ -225,26 +231,30 @@ function activity() {
 	);
 };
 function repos() {
+	var repo = Handlebars.templates['repos'];
 	$('#body').html(msgLoading);
 	api(
 		'GET',
 		'https://api.github.com/users/xero/repos?sort=pushed',
 		'',
 		function(result){
-			var x = '<div class="container">';
+			var x = '';
 			$.each(result, function(i){
-				var name = result[i].name,
-					url = result[i].html_url,
-					language = result[i].language,
-					zipball = result[i].owner.html_url+'/'+result[i].name+'/archive/master.zip',
-					tarball = result[i].owner.html_url+'/'+result[i].name+'/archive/master.tar.gz',
-					descript = result[i].description,
-					watchers = result[i].watchers_count,
-					forks = result[i].forks_count,
-					isfork = result[i].fork===true?'repo-forked':'repo',
-					date = timeAgo(new Date(result[i].created_at).getTime() / 1000),
-					update = timeAgo(new Date(result[i].updated_at).getTime() / 1000);
-				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-repo octicon-'+isfork+'"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+name+'</a><em>'+language+'</em></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'<br/><footer><span class="octicon octicon-file-zip"></span>&nbsp;&nbsp;<a href="'+zipball+'">zip</a>&nbsp;/&nbsp;<a href="'+tarball+'">tar</a></footer></blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small></div></div></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-star"></span>&nbsp;'+watchers+'</div><div class="line"><span class="octicon octicon-git-branch"></span>&nbsp;'+forks+'</div></aside></div></div>';
+				x += repo({
+					name: result[i].name,
+					url: result[i].html_url,
+					language: result[i].language,
+					zipball: result[i].owner.html_url+'/'+result[i].name+'/archive/master.zip',
+					tarball: result[i].owner.html_url+'/'+result[i].name+'/archive/master.tar.gz',
+					descript: result[i].description,
+					watchers: result[i].watchers_count,
+					forks: result[i].forks_count,
+					isfork: result[i].fork===true ?
+						'repo-forked' :
+						'repo',
+					date: timeAgo(new Date(result[i].created_at).getTime() / 1000),
+					update: timeAgo(new Date(result[i].updated_at).getTime() / 1000)
+				});
 			});
 			$('#body').html(x);
 		},
@@ -254,22 +264,29 @@ function repos() {
 	);
 };
 function orgs() {
+	var gridFirst = Handlebars.templates['gridFirst'],
+		gridMid = Handlebars.templates['gridMid'],
+		gridLast = Handlebars.templates['gridLast'],
+		gridBody = Handlebars.templates['gridBody'];
 	$('#body').html(msgLoading);
 	api(
 		'GET',
 		'https://api.github.com/users/xero/orgs',
 		'',
 		function(result){
-			var x = '<div class="container">',
+			var x = '',
 				j = 1;
 			$.each(result, function(i){
-				var body = '<h4><a href="https://github.com/'+result[i].login+'">'+result[i].login+'</a></h4><a href="https://github.com/'+result[i].login+'"><img src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" width="80" height="80" /></a>';
+				var body = gridBody({ 
+					login: result[i].login,
+					avatar: result[i].avatar_url
+				});
 				if((j-1)%4 === 0){
-					x +='<div clas="row"><div class="col-xs-3"><div class="well small">'+body+'</div></div>';
+					x += gridFirst({body: body});
 				} else if(j%4 === 0) {
-					x+='<div class="col-xs-3"><div class="well small">'+body+'</div></div></div>';
+					x += gridLast({body: body});
 				} else {
-					x+='<div class="col-xs-3"><div class="well small">'+body+'</div></div>';
+					x += gridMid({body: body});
 				}
 				++j;
 			});
@@ -281,43 +298,50 @@ function orgs() {
 	);
 };
 function gists() {
+	var gist = Handlebars.templates['gistOverview'],
+		gistcode = Handlebars.templates['gistCode'];
 	$('#body').html(msgLoading);
 	api(
 		'GET',
 		'https://api.github.com/users/xero/gists',
 		'',
 		function(result){
-			var x = '<div class="container">',
+			var x = '',
 				total = result.length;
 			$.each(result, function(i){
-				var name = '',
-					url = result[i].html_url,
-					descript = result[i].description,
-					date = timeAgo(new Date(result[i].created_at).getTime() / 1000),
-					update = timeAgo(new Date(result[i].updated_at).getTime() / 1000),
-					files = Object.keys(result[i].files).length,
-					comments = result[i].comments;
+				var thename = '';
 				$.each(result[i].files, function(i, e){
-					name = e.filename;
+					thename = e.filename;
 				});
-				x += '<div class="row well repo"><div class="col-xs-1 icon"><span class="mega-octicon octicon-gist"></span></div><div class="col-xs-10"><div class="row"><div class="col-xs-12"><h3><a href="'+url+'">'+name+'</a></h3></div></div><div class="row"><div class="col-xs-12 msg"><blockquote>'+descript+'</blockquote></div></div><div class="row"><div class="col-xs-12 date"><small>created: '+date+'</small></div></div><div class="row"><div class="col-xs-12 date"><small>updated: '+update+'</small><hr/></div></div><span id="gist-'+i+'"></span></div><div class="col-xs-1 meta"><aside><div class="line"><span class="octicon octicon-comment-discussion"></span>&nbsp;'+comments+'</div><div class="line"><span class="octicon octicon-gist"></span>&nbsp;'+files+'</div></aside></div></div>';
+				x += gist({
+					id: i,
+					url: result[i].html_url, 
+					name: thename, 
+					descript: result[i].description, 
+					date: timeAgo(new Date(result[i].created_at).getTime() / 1000), 
+					update: timeAgo(new Date(result[i].updated_at).getTime() / 1000), 
+					comments: result[i].comments, 
+					files: Object.keys(result[i].files).length
+				});
 				api(
 					'GET',
 					'https://api.github.com/gists/'+result[i].id,
 					'', 
 					function(result){
-						var xx = '',
-							file = 0;
+						var xx = '';
 						$.each(result.files, function(ii, e){
-							var name = e.filename,
-								raw_url = e.raw_url,
-								size = humanFileSize(e.size),
-								language = !e.language ? e.type : e.language,
-								content = e.content.length > 6000 ? 
-									'<pre><code>'+escapeHTML(e.content.substring(0, 6000))+'\n\n... </code></pre><a href="'+e.raw_url+'">view the entire file</a>' :
-									'<pre><code>'+escapeHTML(e.content)+'</code></pre>';
-							file++;
-							xx += '<div class="row file"><div class="col-xs-12"><h4><a href="'+raw_url+'">'+name+'</a><strong>'+size+'</strong><em>'+language+'</em></h4>'+content+'</div></div>';
+							xx += gistcode({
+								name: e.filename,
+								raw_url: e.raw_url,
+								size: humanFileSize(e.size),
+								language: !e.language ? e.type : e.language,
+								content: e.content.length > 6000 ? 
+									e.content.substring(0, 6000)+'\n\n...' :
+									e.content,
+								link: e.content.length > 6000 ?
+									'<a href="'+e.raw_url+'">view the entire file</a>' :
+									''
+							});
 						});
 						$('#gist-'+i).html(xx);
 						if(i+1 === total) {
@@ -337,22 +361,29 @@ function gists() {
 	);
 };
 function following() {
+	var gridFirst = Handlebars.templates['gridFirst'],
+		gridMid = Handlebars.templates['gridMid'],
+		gridLast = Handlebars.templates['gridLast'],
+		gridBody = Handlebars.templates['gridBody'];
 	$('#body').html(msgLoading);
 	api(
 		'GET',
 		'https://api.github.com/users/xero/following',
 		'',
 		function(result){
-			var x = '<div class="container">',
+			var x = '',
 				j = 1;
 			$.each(result, function(i){
-				var body = '<h4><a href="https://github.com/'+result[i].login+'">'+result[i].login+'</a></h4><a href="https://github.com/'+result[i].login+'"><img width="80" height="80" src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
+				var body = gridBody({ 
+					login: result[i].login,
+					avatar: result[i].avatar_url
+				});
 				if((j-1)%4 === 0){
-					x +='<div clas="row"><div class="col-xs-3"><div class="well small">'+body+'</div></div>';
+					x += gridFirst({body: body});
 				} else if(j%4 === 0) {
-					x+='<div class="col-xs-3"><div class="well small">'+body+'</div></div></div>';
+					x += gridLast({body: body});
 				} else {
-					x+='<div class="col-xs-3"><div class="well small">'+body+'</div></div>';
+					x += gridMid({body: body});
 				}
 				++j;
 			});
@@ -364,22 +395,29 @@ function following() {
 	);
 };
 function followers() {
+	var gridFirst = Handlebars.templates['gridFirst'],
+		gridMid = Handlebars.templates['gridMid'],
+		gridLast = Handlebars.templates['gridLast'],
+		gridBody = Handlebars.templates['gridBody'];
 	$('#body').html(msgLoading);
 	api(
 		'GET',
 		'https://api.github.com/users/xero/followers',
 		'',
 		function(result){
-			var x = '<div class="container">',
+			var x = '',
 				j = 1;
 			$.each(result, function(i){
-				var body = '<h4><a href="https://github.com/'+result[i].login+'">'+result[i].login+'</a></h4><a href="https://github.com/'+result[i].login+'"><img width="80" height="80" src="'+result[i].avatar_url+'" alt="'+result[i].login+'" title="'+result[i].login+'" /></a>';
+				var body = gridBody({ 
+					login: result[i].login,
+					avatar: result[i].avatar_url
+				});
 				if((j-1)%4 === 0){
-					x +='<div clas="row"><div class="col-xs-3"><div class="well small">'+body+'</div></div>';
+					x += gridFirst({body: body});
 				} else if(j%4 === 0) {
-					x +='<div class="col-xs-3"><div class="well small">'+body+'</div></div></div>';
+					x += gridLast({body: body});
 				} else {
-					x +='<div class="col-xs-3"><div class="well small">'+body+'</div></div>';
+					x += gridMid({body: body});
 				}
 				++j;
 			});
@@ -424,8 +462,8 @@ function menu(obj) {
 	$(obj).addClass('active');
 }
 function humanFileSize(size) {
-	var i = Math.floor( Math.log(size) / Math.log(1024) );
-	return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+	var i = Math.floor(Math.log(size) / Math.log(1024));
+	return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 };
 function timeAgo(time){
 	var units = [
@@ -448,16 +486,6 @@ function timeAgo(time){
 		}
 	}
 }
-var escapeHTML = (function () {
-    'use strict';
-    var chr = {
-        '"': '&quot;', '&': '&amp;', "'": '&#39;',
-        '/': '&#47;',  '<': '&lt;',  '>': '&gt;'
-    };
-    return function (text) {
-        return text.replace(/[\"&'\/<>]/g, function (a) { return chr[a]; });
-    };
-}());
 $(document).ready(function() {
 	init();
 	activity();
